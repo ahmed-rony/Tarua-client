@@ -1,0 +1,93 @@
+.blog_list {
+  padding-top: 100px;
+  padding-bottom: 120px;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+
+    .item {
+      display: flex;
+      align-items: center;
+      height: 400px;
+
+      .info {
+        flex: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        .details_info {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          background: #222;
+          padding: 40px;
+          position: absolute;
+          gap: 10px;
+          z-index: 9;
+          right: -30px;
+
+          span {
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 2px;
+          }
+
+          h4 {
+            font-size: 22px;
+            font-weight: 700;
+          }
+
+          p {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 22px;
+            padding-right: 20px;
+            text-align: justify;
+          }
+          &:hover {
+            .image img {
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+
+      &:nth-child(2n) {
+        .info {
+          .details_info {
+            right: inherit;
+            left: -30px;
+          }
+        }
+      }
+
+      .image {
+        flex: 1;
+        overflow: hidden;
+        height: 100%;
+
+        img {
+          width: 100%;
+          object-fit: cover;
+          transform: scale(1);
+          transition: all linear 3s;
+          -webkit-transition: all linear 3s;
+          -moz-transition: all linear 3s;
+          -ms-transition: all linear 3s;
+          -o-transition: all linear 3s;
+        }
+
+        &:hover {
+          img {
+            transform: scale(1.05);
+          }
+        }
+      }
+
+      /* Add this rule to scale the image when hovering on .details_info */
+    }
+  }
+}

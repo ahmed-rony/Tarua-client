@@ -1,0 +1,120 @@
+@import "../../../style.scss";
+
+.about {
+  @include themed {
+    padding: 100px 0;
+    display: flex;
+    .detail_header {
+    }
+    .intro {
+      display: flex;
+
+      .left {
+        flex: 1;
+        .about_img {
+          position: relative;
+          img {
+            width: 100%;
+          }
+          &::after {
+            content: "";
+            border: 1px solid #bcbcbc;
+            position: absolute;
+            top: 30px;
+            left: -30px;
+            width: 100%;
+            height: 100%;
+            // z-index: -1;
+          }
+        }
+      }
+      .right {
+        flex: 1.7;
+        .pera {
+          gap: 10px;
+          padding-left: 80px;
+          display: flex;
+          flex-direction: column;
+          font-size: 20px;
+          font-weight: 300;
+          line-height: 36px;
+          text-align: justify;
+          .detail_header{
+            padding-bottom: 20px;
+          }
+        }
+      }
+    }
+    .owner {
+      display: flex;
+      align-items: center;
+      margin-top: 100px;
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        gap: 20px;
+        img {
+          width: 70%;
+          z-index: 9;
+          border-left: 1px solid #bcbcbc;
+          padding-left: 30px;
+          border-top: 1px solid #bcbcbc;
+          padding-top: 30px;
+        }
+        h4 {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          font-weight: 400;
+          gap: 5px;
+          span {
+            font-size: 12px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+          }
+        }
+      }
+    }
+    .team_perallax{
+      margin-top: 100px;
+      width: 100%;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-position: calc(50% - 100px) 30%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      position: relative;
+      z-index: -1;
+      &::after{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+      }
+      // .team{
+      //   width: 40%;
+      //   h4{
+      //     text-align: center;
+      //   }
+      // }
+    }
+    .award{
+      width: 60%;
+      align-self: center;
+      margin-top: 80px;
+    }
+  }
+}

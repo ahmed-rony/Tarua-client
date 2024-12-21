@@ -1,0 +1,58 @@
+.play_detail {
+  .top {
+    align-items: center;
+  }
+  .middle {
+    width: 100%;
+    position: relative;
+    margin-top: 30px;
+    img {
+      width: 100%;
+    }
+    .date {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 35px 50px;
+      background: #101010;
+    }
+  }
+  .content {
+    margin-top: 80px;
+    .left {
+      .item {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 40px;
+        h5 {
+          font-size: 13px;
+          font-weight: 300;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+        }
+        ul {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          li {
+            font-size: 20px;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+    .right{
+        flex: 2;
+        .detail_about{
+            padding-bottom: 60px;
+        }
+        .award{
+            padding-top: 0;
+        }
+    }
+  }
+  .upcoming{
+    margin-bottom: 0;
+  }
+}

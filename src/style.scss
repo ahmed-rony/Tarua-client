@@ -1,0 +1,90 @@
+$theme: (
+  bg: #101010,
+  bgSoft: #222,
+  text1: #f1f1f1,
+  textColor2: #bcbcbc,
+);
+
+@mixin themed {
+  @content;
+}
+
+@function themed($key) {
+  @return map-get($theme, $key);
+}
+
+@mixin mobile {
+  @media (max-width: 480px) {
+    @content;
+  }
+}
+@mixin tablet {
+  @media (max-width: 960px) {
+    @content;
+  }
+}
+
+// ======================================================
+.event_btn {
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: #f1f1f1;
+  width: fit-content;
+  padding: 15px 50px;
+  border: 1px solid #bcbcbc;
+  background: #222;
+  cursor: pointer;
+  &:hover {
+    border-color: #fff;
+    color: #fff;
+  }
+  transition: all ease 0.3s;
+  -webkit-transition: all ease 0.3s;
+  -moz-transition: all ease 0.3s;
+  -ms-transition: all ease 0.3s;
+  -o-transition: all ease 0.3s;
+}
+.title {
+  display: flex;
+  align-items: center;
+  padding-bottom: 40px;
+  h2 {
+    font-size: 70px;
+    font-weight: 300;
+    position: relative;
+  }
+  .line {
+    width: 20%;
+    height: 1px;
+    background: #ffffff;
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+  .dot {
+    width: 2px;
+    height: 1px;
+    background: #ffffff;
+    margin-left: 5px;
+    margin-top: 20px;
+  }
+}
+.logo {
+  font-size: 40px;
+  font-family: "myfont";
+}
+.date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  h4 {
+    font-size: 80px;
+    font-weight: 300;
+    margin-bottom: -5px;
+    font-family: "Barlow Condensed", serif;
+  }
+  span {
+    font-size: 16px;
+    font-weight: 300;
+  }
+}

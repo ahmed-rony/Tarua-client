@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Upcoming.scss";
 
 const Upcoming = () => {
@@ -22,8 +23,8 @@ const Upcoming = () => {
           </div>
           <div className="item3">
             <div className="info">
-              <button className="read event_btn">Read More</button>
-              <button className="ticket event_btn">Get Ticket</button>
+            <Link to="/play/1" className="read event_btn">Read More</Link>
+            <Link to="/event/1" className="ticket event_btn">Get Ticket</Link>
             </div>
           </div>
         </div>
@@ -42,8 +43,8 @@ const Upcoming = () => {
           </div>
           <div className="item3">
             <div className="info">
-              <button className="read event_btn">Read More</button>
-              <button className="ticket event_btn">Get Ticket</button>
+            <Link to="/play/1" className="read event_btn">Read More</Link>
+            <Link to="/event/1" className="ticket event_btn">Get Ticket</Link>
             </div>
           </div>
         </div>
@@ -62,8 +63,8 @@ const Upcoming = () => {
           </div>
           <div className="item3">
             <div className="info">
-              <button className="read event_btn">Read More</button>
-              <button className="ticket event_btn">Get Ticket</button>
+            <Link to="/play/1" className="read event_btn">Read More</Link>
+            <Link to="/event/1" className="ticket event_btn">Get Ticket</Link>
             </div>
           </div>
         </div>

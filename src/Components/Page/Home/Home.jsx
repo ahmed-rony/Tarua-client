@@ -10,9 +10,7 @@ import "./Home.scss";
 const Home = () => {
   return (
     <div className="home">
-      <div className="container">
-        <Banner />
-      </div>
+      <Banner />
       <About_Sec />
       <Play_sec />
       <Upcoming />

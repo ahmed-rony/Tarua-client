@@ -91,17 +91,17 @@ const Member_detail = () => {
             <h5 className="detail_header">Contact</h5>
             <ul>
               <li>
-                <Link href="#">
+                <Link to="#">
                   <FaFacebookF className="icon" />
                 </Link>
               </li>
               <li>
-                <Link href="#">
+                <Link to="#">
                   <FaInstagram className="icon" />
                 </Link>
               </li>
               <li>
-                <Link href="#">
+                <Link to="#">
                   <FaTwitter className="icon" />
                 </Link>
               </li>

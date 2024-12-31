@@ -1,0 +1,10 @@
+.stairs{
+    display: flex;
+    flex-direction: column;
+    .step{
+        width: 45px;
+        height: 13px;
+        border: 1px solid #bcbcbc;
+        // background: rgb(28, 177, 43);
+    }
+}

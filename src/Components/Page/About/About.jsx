@@ -1,7 +1,10 @@
+import { Link } from "react-router-dom";
 import "./About.scss";
-import img01 from "../../../../public/images/13.jpg";
-import img02 from "../../../../public/images/41.jpg";
-import { GiDramaMasks } from "react-icons/gi";
+import img01 from "/images/13.jpg";
+import img02 from "/images/41.jpg";
+import img03 from "/images/17.jpg";
+import img04 from "/images/32.jpg";
+// import { GiDramaMasks } from "react-icons/gi";
 
 const About = () => {
   return (
@@ -22,18 +25,18 @@ const About = () => {
       </div>
 
       <div className="owner">
-        <div className="content">
-          <img src="/public/images/17.jpg" alt="" />
+        <Link to="/about/1" className="content">
+          <img src={img03} alt="" />
           <h4>
             Samantha Moon <span>Founder</span>
           </h4>
-        </div>
-        <div className="content">
-          <img src="/public/images/32.jpg" alt="" />
+        </Link>
+        <Link to="/about/1" className="content">
+          <img src={img04} alt="" />
           <h4>
             Bakar Bokul <span>Director</span>
           </h4>
-        </div>
+        </Link>
       </div>
       <div className="team_perallax" style={{ backgroundImage: `url(${img02})` }}>
         {/* <div className="team">

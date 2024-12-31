@@ -29,42 +29,42 @@ const Members = () => {
       </div>
       <div className="family">
         <div className="col">
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img01} alt="" />
           </Link>
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img02} alt="" />
           </Link>
         </div>
         <div className="col">
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img03} alt="" />
           </Link>
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img04} alt="" />
           </Link>
         </div>
         <div className="col">
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img02} alt="" />
           </Link>
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img01} alt="" />
           </Link>
         </div>
         <div className="col">
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img04} alt="" />
           </Link>
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img03} alt="" />
           </Link>
         </div>
         <div className="col">
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img01} alt="" />
           </Link>
-          <Link href="/" className="f_link">
+          <Link to="/about/1" className="f_link">
             <img src={img04} alt="" />
           </Link>
         </div>
@@ -78,17 +78,17 @@ const Members = () => {
 {
   /* <div className="row">
   <Link
-    href="/"
+    to="/"
     className="item item01"
     style={{ backgroundImage: `url(${img01})` }}
   ></Link>
   <Link
-    href="/"
+    to="/"
     className="item item02"
     style={{ backgroundImage: `url(${img02})` }}
   ></Link>
   <Link
-    href="/"
+    to="/"
     className="item item03"
     style={{ backgroundImage: `url(${img04})` }}
   ></Link>

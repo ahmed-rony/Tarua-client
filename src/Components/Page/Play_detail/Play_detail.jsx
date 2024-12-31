@@ -27,13 +27,13 @@ const Play_detail = () => {
             <div className="item">
               <h5 className="post">design</h5>
               <ul>
-                <li>Tarek Rahman</li>
+                <li>Tareq Rahman</li>
               </ul>
             </div>
             <div className="item">
               <h5 className="post">actors</h5>
               <ul>
-                <li>Tarek Rahman</li>
+                <li>Tareq Rahman</li>
                 <li>Anthony Russell</li>
                 <li>Aron Westy</li>
                 <li>Deborah Greene</li>

@@ -15,7 +15,7 @@ const Home = () => {
       <Play_sec />
       <Upcoming />
       <Members />
-      <Miss />
+      {/* <Miss /> */}
       <div className="container">{/* <Premiere /> */}</div>
     </div>
   );

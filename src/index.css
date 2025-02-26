@@ -21,11 +21,7 @@ ul{
 a{
   text-decoration: none;
 }
-.container{
-  width: 1320px;
-  /* width: 77%; */
-  margin: 0 auto;
-}
+
 @font-face {
   font-family: "myfont"; /* Name to reference the font */
   src: url("../assets/myfont.ttf") format("truetype");

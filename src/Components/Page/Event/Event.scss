@@ -4,19 +4,19 @@
   display: flex;
   flex-direction: column;
   gap: 60px;
-  .top{
+  .top {
     text-align: center;
     margin-bottom: 20px;
   }
   .content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    gap: 40px;
+    display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Always try to create 2 columns */
+  gap: 40px;
+  width: 100%;
 
     .event_item {
-      flex: 1;
+      width: 100%;
+      margin-bottom: 20px;
       .item {
         position: relative;
         .event_img {
@@ -75,8 +75,8 @@
         gap: 30px;
         margin-top: 40px;
         .read {
-            background: #3b3b3b;
-          }
+          background: #3b3b3b;
+        }
       }
     }
   }

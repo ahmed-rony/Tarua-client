@@ -1,145 +1,163 @@
 import "./Play_detail.scss";
-import img01 from "../../../../public/images/39.jpg";
+import { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import 'react-photo-view/dist/react-photo-view.css';
+import { getDateNum, getMonth } from "../Seat_Plan/Seat_Plan";
+
 
 const Play_detail = () => {
+  const [loading, setLoading] = useState(false);
+  const [drama, setDrama] = useState([]);
+  const { id } = useParams();
+  console.log(drama);
+
+  const fetchDrama = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        `https://tarua-server.onrender.com/api/drama/${id}`
+      );
+
+      if (response.data?.drama) {
+        setDrama(response.data?.drama);
+      } else {
+        console.warn("Invalid response format:", response.data);
+        setDrama([]);
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching shows:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDrama();
+  }, [fetchDrama]);
+
   return (
     <div className="play_detail member_detail">
       <div className="top">
-        <h2>Adom Surot</h2>
+        <h2>{drama?.title}</h2>
         <h6>About Play</h6>
       </div>
       <div className="container">
         <div className="middle">
-          <img src={img01} alt="" />
-          <div className="date">
-            <h4>15</h4>
-            <span>May</span>
+          <div className="event_img">
+            <img src={drama?.image} alt="event image" />
           </div>
+          {drama?.shows && (
+            <div className="date">
+              <h4>{getDateNum(drama?.shows?.[0]?.date)}</h4>
+              <span>{getMonth(drama?.shows?.[0]?.date)}</span>
+            </div>
+          )}
         </div>
         <div className="content">
           <div className="left">
             <div className="item">
               <h5 className="post">Director</h5>
               <ul>
-                <li>Bakar Bokul</li>
+                <li>{drama?.director}</li>
               </ul>
             </div>
             <div className="item">
               <h5 className="post">design</h5>
               <ul>
-                <li>Tareq Rahman</li>
+                {drama?.designers?.map((d, index) => (
+                  <li key={index}>{d}</li>
+                ))}
               </ul>
             </div>
             <div className="item">
               <h5 className="post">actors</h5>
               <ul>
-                <li>Tareq Rahman</li>
-                <li>Anthony Russell</li>
-                <li>Aron Westy</li>
-                <li>Deborah Greene</li>
-                <li>Emily Gibson</li>
-                <li>Diana Banks</li>
-                <li>Jack Martin</li>
+                {drama?.actors?.map((a, index) => (
+                  <li key={index}>{a}</li>
+                ))}
               </ul>
+            </div>
+            <div className="item">
+              <h5 className="post">Moments</h5>
+              <div className="gallery">
+                <div className="item_card">
+                  <PhotoProvider maskOpacity={0.5}>
+                    <div className="foo">
+                      {drama?.dramaPics?.map((item, index) => (
+                        <PhotoView key={index} src={item}>
+                          <img src={item} alt="" />
+                        </PhotoView>
+                      ))}
+                    </div>
+                  </PhotoProvider>
+                </div>
+              </div>
             </div>
           </div>
           <div className="right">
             <div className="detail_about">
               <h5 className="detail_header">About</h5>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Eligendi, corporis aperiam? Aliquam dicta non aliquid repellat
-                voluptatum eligendi quae exercitationem ad debitis assumenda
-                vero quisquam hic veritatis magnam aperiam provident dolorem id
-                reiciendis, minima maiores voluptates culpa temporibus suscipit
-                magnam repellat quidem ducimus animi nobis soluta provident
-                nulla <br />
-                autem accusantium ratione quaerat quis? Corrupti adipisci modi
-                unde, eius, nam, amet neque harum voluptatem eos sapiente est
-                facilis a obcaecati. Provident quas architecto voluptas,
-                consectetur molestiae tempora deleniti magni quam quasi eius eum
-                dolores iusto, cumque facere? Eligendi ducimus obcaecati ipsa
-                consequuntur rerum quas illo. Perspiciatis cumque quibusdam
-                eveniet qui modi, itaque nisi alias minima dolor molestiae,
-                accusamus totam unde, illo eos mollitia amet. Quis commodi
-                obcaecati architecto rem placeat aliquid cum, nesciunt magnam?
-                Ipsam distinctio ab omnis suscipit?
-              </p>
+              {drama?.description?.map((d, index) => (
+                <p key={index}>{d}</p>
+              ))}
             </div>
             <div className="detail_about">
               <h5 className="detail_header">Director's Word</h5>
-              <p>
-                autem accusantium ratione quaerat quis? Corrupti adipisci modi
-                unde, eius, nam, amet neque harum voluptatem eos sapiente est
-                facilis a obcaecati. Provident quas architecto voluptas,
-                consectetur molestiae tempora deleniti magni quam quasi eius eum
-                dolores iusto, cumque facere? Eligendi ducimus obcaecati ipsa
-                consequuntur rerum quas illo. Perspiciatis cumque quibusdam
-                eveniet qui modi, itaque nisi alias minima dolor molestiae,
-                accusamus totam unde, illo eos mollitia amet. Quis commodi
-                obcaecati architecto rem placeat aliquid cum, nesciunt magnam?
-                Ipsam distinctio ab omnis suscipit?
-              </p>
+              <p>{drama?.directorsWord}</p>
             </div>
             <div className="award">
               <h5 className="detail_header">Media & Awards</h5>
-              <div className="item">
-                <div className="title">
-                  <h2>2015</h2> <div className="line" />
-                  <div className="dot" />
-                </div>
-                <div className="desc">
-                  <div className="left_item"></div>
-                  <div className="right_item">
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Nisi est nesciunt illo officiis illum quia ipsa placeat
-                      amet nihil nostrum molestias autem nemo assumenda
-                      recusandae, repellat magni esse ad facere.
-                    </p>
+              {drama?.mediaAwards &&
+                drama?.mediaAwards?.map((d, index) => (
+                  <div key={index} className="item">
+                    <div className="title">
+                      <h2>{d?.year}</h2> <div className="line" />
+                      <div className="dot" />
+                    </div>
+                    <div className="desc">
+                      <div className="left_item"></div>
+                      <div className="right_item">
+                        <p>{d?.description}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="item">
-                <div className="title">
-                  <h2>2020</h2> <div className="line" />
-                  <div className="dot" />
-                </div>
-                <div className="desc">
-                  <div className="left_item"></div>
-                  <div className="right_item">
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Nisi est nesciunt illo officiis illum quia ipsa placeat
-                      amet nihil nostrum molestias autem nemo assumenda
-                      recusandae, repellat magni esse ad facere.
-                    </p>
-                  </div>
-                </div>
-              </div>
+                ))}
             </div>
           </div>
         </div>
         <div className="upcoming">
-          <div className="content">
-            <div className="item1">
-              <div className="date">
-                <h4>15</h4>
-                <span>May</span>
+          {drama?.shows &&
+            drama?.shows?.map((a, index) => (
+              <div key={index} className="content">
+                <div className="item1">
+                  <div className="date">
+                    <h4>{getDateNum(a?.date) || "00"}</h4>
+                    <span>{getMonth(a?.date) || "month"}</span>
+                  </div>
+                </div>
+                <div className="item2">
+                  <div className="play">
+                    <h4>{drama?.title}</h4>
+                    <h5>
+                      Drama / {a?.venueName} / {a?.hall}
+                    </h5>
+                  </div>
+                </div>
+                <div className="item3">
+                  <div className="info">
+                    <Link to={`/event/${a?.id}`} className="ticket event_btn">
+                      Get Ticket
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="item2">
-              <div className="play">
-                <h4>Adam Surot</h4>
-                <h5>Drama / Shilpokola Academy Experimental Hall</h5>
-              </div>
-            </div>
-            <div className="item3">
-              <div className="info">
-                <button className="ticket event_btn">Get Ticket</button>
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
       </div>
     </div>

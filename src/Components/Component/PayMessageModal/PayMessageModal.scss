@@ -1,0 +1,29 @@
+.react-responsive-modal-modal {
+  max-width: inherit;
+  width: 70%;
+  background: #222;
+  padding: inherit;
+}
+
+.booking_con {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 40px;
+  gap: 20px;
+
+  h2 {
+    color: #0cc015;
+  }
+  p {
+    text-align: center;
+    font-size: 20px;
+    span {
+      color: #f88031;
+    }
+  }
+  h3 {
+    color: #fff;
+    font-size: 30px;
+  }
+}

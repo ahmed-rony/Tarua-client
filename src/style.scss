@@ -48,10 +48,21 @@ $theme: (
   display: flex;
   align-items: center;
   padding-bottom: 40px;
+  @include tablet {
+    display: inline-block;
+  }
   h2 {
     font-size: 70px;
     font-weight: 300;
     position: relative;
+    @include tablet {
+      font-size: 50px;
+      text-align: center;
+    }
+    @include mobile {
+      text-align: center;
+      font-size: 40px;
+    }
   }
   .line {
     width: 20%;
@@ -107,4 +118,12 @@ $theme: (
 .detail_header {
   font-size: 30px;
   font-weight: 400;
+}
+
+.container{
+  width: 1320px;
+  margin: 0 auto;
+  @include tablet {
+    width: 100%;
+  }
 }

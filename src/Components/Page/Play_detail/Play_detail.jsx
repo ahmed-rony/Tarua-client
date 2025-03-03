@@ -3,9 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { PhotoProvider, PhotoView } from "react-photo-view";
-import 'react-photo-view/dist/react-photo-view.css';
+import "react-photo-view/dist/react-photo-view.css";
 import { getDateNum, getMonth } from "../Seat_Plan/Seat_Plan";
-
+import { BASENDPOINT } from "../../../variable";
 
 const Play_detail = () => {
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ const Play_detail = () => {
       setLoading(true);
 
       const response = await axios.get(
-        `https://tarua-server.onrender.com/api/drama/${id}`
+        BASENDPOINT + `/drama/${id}`
       );
 
       if (response.data?.drama) {
@@ -52,26 +52,37 @@ const Play_detail = () => {
           <div className="event_img">
             <img src={drama?.image} alt="event image" />
           </div>
-          {drama?.shows && (
-            <div className="date">
-              <h4>{getDateNum(drama?.shows?.[0]?.date)}</h4>
-              <span>{getMonth(drama?.shows?.[0]?.date)}</span>
-            </div>
-          )}
+          <div className="item1">
+            {drama?.shows &&
+              drama?.shows?.[0]?.dates?.map((date, index) => (
+                <div key={index} className="date">
+                  <h4>{getDateNum(date) || "00"}</h4>
+                  <span>{getMonth(date) || "month"}</span>
+                </div>
+              ))}
+          </div>
         </div>
         <div className="content">
           <div className="left">
             <div className="item">
               <h5 className="post">Director</h5>
               <ul>
-                <li>{drama?.director}</li>
+                {drama?.director?.map((d, index) => (
+                  <li key={index}>
+                    <Link to={`/about/${d?.id}`}>{d?.name}</Link>
+                    {index < drama?.director?.length - 1 && ", "}
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="item">
               <h5 className="post">design</h5>
               <ul>
                 {drama?.designers?.map((d, index) => (
-                  <li key={index}>{d}</li>
+                  <li key={index}>
+                    <Link to={`/about/${d?.id}`}>{d?.name}</Link>
+                    {index < drama?.designers?.length - 1 && ", "}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -79,7 +90,10 @@ const Play_detail = () => {
               <h5 className="post">actors</h5>
               <ul>
                 {drama?.actors?.map((a, index) => (
-                  <li key={index}>{a}</li>
+                  <li key={index}>
+                    <Link to={`/about/${a?.id}`}>{a?.name}</Link>
+                    {index < drama?.actors?.length - 1 && ", "}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -134,26 +148,65 @@ const Play_detail = () => {
         <div className="upcoming">
           {drama?.shows &&
             drama?.shows?.map((a, index) => (
-              <div key={index} className="content">
-                <div className="item1">
-                  <div className="date">
-                    <h4>{getDateNum(a?.date) || "00"}</h4>
-                    <span>{getMonth(a?.date) || "month"}</span>
+              <div key={index}>
+                <div className="content">
+                  <div className="item1">
+                    {a?.dates &&
+                      a?.dates?.map((date, index) => (
+                        <div key={index} className="date">
+                          <h4>{getDateNum(date) || "00"}</h4>
+                          <span>{getMonth(date) || "month"}</span>
+                        </div>
+                      ))}
+                  </div>
+                  <div className="item2">
+                    <div className="play">
+                      <h4>{drama?.title}</h4>
+                      <h5>
+                        Drama / {a?.venueName} / {a?.hall}
+                      </h5>
+                    </div>
+                  </div>
+                  <div className="item3">
+                    <div className="info">
+                      <Link
+                        to={`/event/${drama?.id}`}
+                        className="ticket event_btn"
+                      >
+                        Get Ticket
+                      </Link>
+                    </div>
                   </div>
                 </div>
-                <div className="item2">
-                  <div className="play">
-                    <h4>{drama?.title}</h4>
-                    <h5>
-                      Drama / {a?.venueName} / {a?.hall}
-                    </h5>
+                <div className="content content_mbl">
+                  <div className="top">
+                    <div className="item1">
+                      {a?.dates &&
+                        a?.dates?.map((date, index) => (
+                          <div key={index} className="date">
+                            <h4>{getDateNum(date) || "00"}</h4>
+                            <span>{getMonth(date) || "month"}</span>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="item2">
+                      <div className="play">
+                        <h4>{drama?.title}</h4>
+                        <h5>
+                          Drama / {a?.venueName} / {a?.hall}
+                        </h5>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="item3">
-                  <div className="info">
-                    <Link to={`/event/${a?.id}`} className="ticket event_btn">
-                      Get Ticket
-                    </Link>
+                  <div className="item3">
+                    <div className="info">
+                      <Link
+                        to={`/event/${drama?.id}`}
+                        className="ticket event_btn"
+                      >
+                        Get Ticket
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

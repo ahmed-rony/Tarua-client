@@ -1,7 +1,70 @@
 import { Link } from "react-router-dom";
 import "./Blog_list.scss";
+import { News_Data } from "../../Utils/Datas/News";
+import { useEffect, useState } from "react";
+import { BASENDPOINT, NEWSPOINT } from "../../../variable";
+import axios from "axios";
 
 const Blog_list = () => {
+  const [newsList, setNewsList] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true); // Track if there's more news to load
+
+  console.log(newsList);
+  
+  // Fetch news when the user scrolls to the bottom of the page
+  const fetchNews = async () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    try {
+      console.log(`Fetching news with skip: ${skip}`); // Log skip value before fetching
+      const response = await axios.get(
+        BASENDPOINT + NEWSPOINT + `?skip=${skip}`
+      );
+
+
+      if (response.data.length === 0) {
+        setHasMore(false); // No more data to load
+      }
+
+      setNewsList((prevNews) => {
+        const newNews = response.data.filter(
+          (item) =>
+            !prevNews.some((existingItem) => existingItem._id === item._id)
+        );
+        return [...prevNews, ...newNews];
+      });
+
+      setSkip((prevSkip) => prevSkip + 20); // Increase skip for next fetch
+    } catch (error) {
+      console.error("Error fetching news", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Set up the scroll event listener
+  const handleScroll = () => {
+    const bottom =
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight;
+    if (bottom) {
+      fetchNews();
+    }
+  };
+
+  // UseEffect to initialize fetch and add/remove scroll listener
+  useEffect(() => {
+    fetchNews(); // Only runs once when the component is mounted
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll); // Cleanup on unmount
+    };
+  }, []); // Empty dependency array means this effect only runs on mount and unmount
+
   return (
     <div className="blog_list container">
       <div className="top">
@@ -9,61 +72,32 @@ const Blog_list = () => {
         <h6>About Tarua</h6>
       </div>
       <div className="content">
-        <div className="item">
-          <div className="info">
+        {News_Data?.map((item, index) => (
+          <div className="item" key={index}>
+            <div className="info">
+              <Link
+                to={item?.link}
+                className="details_info"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{item?.date}</span>
+                <h4>{item?.title}</h4>
+                <p>{item?.description}</p>
+              </Link>
+            </div>
             <Link
-              to="#"
-              className="details_info"
+              to={item.link}
+              className="image"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <span>20.08.2024</span>
-              <h4>Lorem ipsum dolor sit amet consectetur</h4>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit
-                provident suscipit dolorem asperiores pariatur molestias
-                temporibus est alias illo possimus ad.
-              </p>
+              <img src={item?.image} alt={item.title} />
             </Link>
           </div>
-          <Link
-            to="#"
-            className="image"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src="/images/26.jpg" alt="" />
-          </Link>
-        </div>
-        <div className="item">
-          <Link
-            to="#"
-            className="image"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src="/images/26.jpg" alt="" />
-          </Link>
-          <div className="info">
-            <Link
-              to="#"
-              className="details_info"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>20.08.2024</span>
-              <h4>Lorem ipsum dolor sit amet consectetur</h4>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit
-                provident suscipit dolorem asperiores pariatur molestias
-                temporibus est alias illo possimus ad.
-              </p>
-            </Link>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
 };
-
 export default Blog_list;

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
+import { BASENDPOINT } from "../../../../variable";
 
 function getMonth(dateProp) {
   const date = new Date(dateProp);
@@ -21,12 +22,15 @@ const Bookings = () => {
   const [loading, setLoading] = useState(false);
   const [bookings, setBookings] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState(null); // Track selected booking
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [bookingEnabled, setBookingEnabled] = useState(null);
 
   const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get("https://tarua-server.onrender.com/api/booking/running");
+      const response = await axios.get(
+        BASENDPOINT + `/booking/running`
+      );
       if (response.data && Array.isArray(response.data.bookings)) {
         setBookings(response.data.bookings);
       } else {
@@ -47,7 +51,6 @@ const Bookings = () => {
     fetchBookings(); // Fetch bookings on component mount
   }, [fetchBookings]);
 
-
   const handleSubmit = async () => {
     if (!selectedBooking) return;
     setLoading(true);
@@ -56,7 +59,7 @@ const Bookings = () => {
       const { email, _id: bookingId } = selectedBooking;
 
       const response = await axios.post(
-        "https://tarua-server.onrender.com/api/booking/verify",
+        BASENDPOINT + `/booking/verify`,
         { email, bookingId },
         {
           headers: { "Content-Type": "application/json" },
@@ -76,6 +79,59 @@ const Bookings = () => {
     }
   };
 
+  const fetchBookingStatus = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        BASENDPOINT + `/show/booking-status`
+      );
+      if (response.data) {
+        setBookingEnabled(response.data.bookingEnabled);
+      } else {
+        console.warn("Invalid response format:", response.data);
+        setBookingEnabled(null);
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching booking status:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBookingStatus();
+  }, [fetchBookingStatus]);
+
+  const toggleBooking = async () => {
+    if (bookingEnabled === null) return;
+    setLoading(true);
+  
+    try {
+      const response = await axios.put(
+        BASENDPOINT + `/show/toggle-booking`,
+        { enable: !bookingEnabled },
+        { headers: { "Content-Type": "application/json" } }
+      );
+  
+      if (response.data.success) {
+        // Fetch updated status from backend instead of assuming the change
+        await fetchBookingStatus();
+        alert(`Booking has been ${response.data.bookingEnabled ? "enabled" : "disabled"}`);
+      } else {
+        alert("Failed to update booking status.");
+      }
+    } catch (error) {
+      console.error("Error toggling booking:", error);
+      alert("Failed to update booking status.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   return (
     <>
       <div className="archive">
@@ -84,14 +140,26 @@ const Bookings = () => {
             <div className="title">
               <h2>Bookings</h2>
             </div>
+            <div className="booking_btn">
+              <button
+                className="event_btn"
+                onClick={toggleBooking}
+                disabled={loading}
+              >
+                {loading
+                  ? "Updating..."
+                  : bookingEnabled
+                  ? "Disable Booking"
+                  : "Enable Booking"}
+              </button>
+            </div>
           </div>
 
-          {/* Data Table */}
           <table className="data-table">
             <thead>
               <tr>
                 <th>Drama</th>
-                <th>Director</th>
+                <th>Email</th>
                 <th>Date</th>
                 <th>Price</th>
                 <th>Status</th>
@@ -101,8 +169,12 @@ const Bookings = () => {
               {bookings?.length > 0 ? (
                 bookings.map((data, index) => (
                   <tr key={index}>
-                    <td title={data?.show?.drama?.title}>{data?.show?.drama?.title}</td>
-                    <td className="truncate" title={data?.email}>{data?.email}</td>
+                    <td className="truncate" title={data?.show?.drama?.title}>
+                      {data?.show?.drama?.title}
+                    </td>
+                    <td className="truncate" title={data?.email}>
+                      {data?.email}
+                    </td>
                     <td className="truncate">
                       {getMonth(data?.show?.date)}{" "}
                       {getDateNum(data?.show?.date)},{" "}
@@ -135,7 +207,6 @@ const Bookings = () => {
         </div>
       </div>
 
-      {/* Single Modal for Booking Verification */}
       {modalOpen && selectedBooking && (
         <Modal open={modalOpen} onClose={() => setModalOpen(false)} center>
           <div className="booking_con">
@@ -153,6 +224,5 @@ const Bookings = () => {
     </>
   );
 };
-
 
 export default Bookings;

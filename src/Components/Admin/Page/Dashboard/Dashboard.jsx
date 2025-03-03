@@ -4,6 +4,7 @@ import { PiSlideshowBold } from "react-icons/pi";
 import { GiDramaMasks } from "react-icons/gi";
 import { HiOutlineNewspaper } from "react-icons/hi2";
 import { IoTicketOutline } from "react-icons/io5";
+import { IoPeopleCircle } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
@@ -13,7 +14,7 @@ const Dashboard = () => {
         <div className="tops">
           <Link to="/123/admin/dramas" className="item">
             <GiDramaMasks className="icon01" />
-            <span>Drama</span>
+            <span>Dramas</span>
           </Link>
           <Link to="/123/admin/bookings" className="item">
             <LuTicket className="icon01" />
@@ -28,6 +29,10 @@ const Dashboard = () => {
           <Link to="/123/admin/news" className="item">
             <HiOutlineNewspaper className="icon01" />
             <span>News</span>
+          </Link>
+          <Link to="/123/admin/member" className="item">
+            <IoPeopleCircle className="icon01" />
+            <span>Members</span>
           </Link>
           <Link to="/123/admin/verify-ticket" className="item">
             <IoTicketOutline className="icon01" />

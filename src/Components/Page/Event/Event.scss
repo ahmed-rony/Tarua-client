@@ -1,81 +1,123 @@
+@import "../../../style.scss";
+
 .event {
-  padding-top: 100px;
-  padding-bottom: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-  .top {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .content {
-    display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Always try to create 2 columns */
-  gap: 40px;
-  width: 100%;
-
-    .event_item {
-      width: 100%;
+  @include themed {
+    padding-top: 100px;
+    padding-bottom: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    @include tablet {
+      gap: 30px;
+      padding-top: 60px;
+    }
+    .top {
+      text-align: center;
       margin-bottom: 20px;
-      .item {
-        position: relative;
-        .event_img {
-          width: 100%;
-          overflow: hidden;
+    }
+    .content {
+      @include tablet {
+        padding: 0 20px;
+      }
+      display: grid;
+      grid-template-columns: repeat(
+        2,
+        1fr
+      );
+      gap: 40px;
+      width: 100%;
+      @include mobile {
+        grid-template-columns: repeat(
+          1,
+          1fr
+        );
 
-          img {
+      }
+
+      .event_item {
+        width: 100%;
+        margin-bottom: 20px;
+        .item {
+          position: relative;
+          .event_img {
             width: 100%;
-            height: 500px;
-            object-fit: cover;
-            transition: all linear 3s;
-            -webkit-transition: all linear 3s;
-            -moz-transition: all linear 3s;
-            -ms-transition: all linear 3s;
-            -o-transition: all linear 3s;
-          }
-          &::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            inset: 0;
-            background: linear-gradient(
-              0deg,
-              rgba(16, 16, 16, 1) 0%,
-              rgba(56, 102, 69, 0) 50%
-            );
-          }
-          &:hover {
+            overflow: hidden;
+
             img {
-              transform: scale(1.05);
+              width: 100%;
+              height: 500px;
+              object-fit: cover;
+              transition: all linear 3s;
+              -webkit-transition: all linear 3s;
+              -moz-transition: all linear 3s;
+              -ms-transition: all linear 3s;
+              -o-transition: all linear 3s;
+              @include tablet {
+                height: 350px;
+              }
+              @include mobile {
+                height: 300px;
+              }
+            }
+            &::after {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              inset: 0;
+              background: linear-gradient(
+                0deg,
+                rgba(16, 16, 16, 1) 0%,
+                rgba(56, 102, 69, 0) 50%
+              );
+            }
+            &:hover {
+              img {
+                transform: scale(1.05);
+              }
+            }
+          }
+          h4 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: 700;
+            gap: 5px;
+            position: absolute;
+            left: 30px;
+            bottom: 30px;
+            @include tablet {
+              font-size: 22px;
+              left: 20px;
+              bottom: 20px;
+            }
+            @include mobile {
+              font-size: 20px;
+            }
+            span {
+              font-size: 12px;
+              font-weight: 300;
+              text-transform: uppercase;
+              letter-spacing: 3px;
+              @include tablet {
+                letter-spacing: 1px;
+                font-size: 10px;
+              }
             }
           }
         }
-        h4 {
+        .info {
           display: flex;
-          flex-direction: column;
           justify-content: center;
-          font-size: 30px;
-          font-weight: 700;
-          gap: 5px;
-          position: absolute;
-          left: 30px;
-          bottom: 30px;
-          span {
-            font-size: 12px;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 3px;
+          gap: 30px;
+          margin-top: 40px;
+          @include tablet {
+            margin-top: 20px;
           }
-        }
-      }
-      .info {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        margin-top: 40px;
-        .read {
-          background: #3b3b3b;
+          .read {
+            background: #3b3b3b;
+          }
         }
       }
     }

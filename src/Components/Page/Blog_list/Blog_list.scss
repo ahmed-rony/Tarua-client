@@ -1,95 +1,127 @@
+@import "../../../style.scss";
+
 .blog_list {
-  padding-top: 80px;
-  padding-bottom: 120px;
-  .top {
-    align-items: center;
-  }
+  @include themed {
+    padding-top: 80px;
+    padding-bottom: 100px;
+    @include tablet {
+      padding-top: 60px;
+    }
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
-    padding-top: 30px;
-
-    .item {
+    .content {
       display: flex;
-      align-items: center;
-      height: 400px;
+      flex-direction: column;
+      gap: 60px;
 
-      .info {
-        flex: 1;
-        position: relative;
+      .item {
         display: flex;
         align-items: center;
+        min-height: 400px;
+        @include tablet {
+          min-height: 300px;
+        }
+        @include mobile {
+          min-height: 150px;
+        }
 
-        .details_info {
+        .info {
+          flex: 1;
+          position: relative;
           display: flex;
-          flex-direction: column;
-          justify-content: center;
-          background: #222;
-          padding: 40px;
-          position: absolute;
-          gap: 10px;
-          z-index: 9;
-          right: -30px;
+          align-items: center;
 
-          span {
-            font-size: 13px;
-            font-weight: 300;
-            letter-spacing: 2px;
-          }
+          .details_info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #222;
+            padding: 40px;
+            position: absolute;
+            color: #222;
+            gap: 10px;
+            z-index: 9;
+            right: -30px;
+            @include mobile {
+              padding: 20px 15px;
+            }
 
-          h4 {
-            font-size: 22px;
-            font-weight: 700;
-          }
+            span {
+              font-size: 13px;
+              font-weight: 300;
+              letter-spacing: 2px;
+              @include mobile {
+                font-size: 10px;
+              }
+            }
 
-          p {
-            font-size: 16px;
-            font-weight: 300;
-            line-height: 22px;
-            padding-right: 20px;
-            text-align: justify;
+            h4 {
+              font-size: 22px;
+              font-weight: 700;
+              @include mobile {
+                font-size: 15px;
+                font-weight: 600;
+              }
+            }
+
+            p {
+              font-size: 16px;
+              font-weight: 300;
+              line-height: 22px;
+              padding-right: 20px;
+              text-align: justify;
+              @include mobile {
+                font-size: 12px;
+                line-height: 18px;
+                padding-right: 10px;
+              }
+            }
           }
           &:hover {
-            .image img {
+            ~ .image img {
               transform: scale(1.05);
             }
           }
         }
-      }
 
-      &:nth-child(2n) {
-        .info {
-          .details_info {
-            right: inherit;
-            left: -30px;
+        .image {
+          flex: 1;
+          overflow: hidden;
+          height: 100%;
+
+          img {
+            width: 100%;
+            object-fit: cover;
+            transform: scale(1);
+            transition: all linear 3s;
+            -webkit-transition: all linear 3s;
+            -moz-transition: all linear 3s;
+            -ms-transition: all linear 3s;
+            -o-transition: all linear 3s;
+            &:hover {
+              transform: scale(1.05);
+              -webkit-transform: scale(1.05);
+              -moz-transform: scale(1.05);
+              -ms-transform: scale(1.05);
+              -o-transform: scale(1.05);
+            }
           }
         }
-      }
 
-      .image {
-        flex: 1;
-        overflow: hidden;
-        height: 100%;
-
-        img {
-          width: 100%;
-          object-fit: cover;
-          transform: scale(1);
-          transition: all linear 3s;
-          -webkit-transition: all linear 3s;
-          -moz-transition: all linear 3s;
-          -ms-transition: all linear 3s;
-          -o-transition: all linear 3s;
-        }
-
-        &:hover {
-          img {
-            transform: scale(1.05);
+        &:nth-of-type(odd) {
+          flex-direction: row-reverse;
+          .info {
+            .details_info {
+              right: inherit;
+              left: -30px;
+            }
           }
         }
       }
     }
   }
+}
+
+
+.top {
+  align-items: center;
 }

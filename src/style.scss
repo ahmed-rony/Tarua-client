@@ -34,6 +34,14 @@ $theme: (
   border: 1px solid #bcbcbc;
   background: #222;
   cursor: pointer;
+  @include tablet {
+    padding: 10px 40px;
+    font-size: 14px;
+  }
+  @include mobile {
+    padding: 10px 35px;
+    font-size: 13px;
+  }
   &:hover {
     border-color: #fff;
     color: #fff;
@@ -107,17 +115,34 @@ $theme: (
   h2 {
     font-size: 60px;
     font-weight: 400;
+    @include tablet {
+      font-size: 40px;
+    }
+    @include mobile {
+      font-size: 32px;
+    }
   }
   h6 {
     font-size: 12px;
     font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 5px;
+    @include tablet {
+      letter-spacing: 3px;
+      font-size: 10px;
+    }
+    @include mobile {
+      letter-spacing: 3px;
+      font-size: 8px;
+    }
   }
 }
 .detail_header {
   font-size: 30px;
   font-weight: 400;
+  @include mobile {
+    font-size: 26px;
+  }
 }
 
 .container{

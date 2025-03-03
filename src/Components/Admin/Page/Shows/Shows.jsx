@@ -4,6 +4,7 @@ import "./Shows.scss";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import CreateShowContext from "../../../Utils/Reducers/CreateShow_Reducer";
+import { BASENDPOINT } from "../../../../variable";
 
 function getMonth(dateProp) {
   const date = new Date(dateProp);
@@ -26,15 +27,16 @@ const Shows = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { state, dispatch } = useContext(CreateShowContext);
   const { dramaId, venueId, maxCapacity, date, time } = state;
+  // console.log(shows);
 
   const fetchShows = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get("https://tarua-server.onrender.com/api/show");
+      const response = await axios.get( BASENDPOINT + `/show`);
 
-      if (response.data && Array.isArray(response.data.shows)) {
-        setShows(response.data.shows);
+      if (response.data && Array.isArray(response.data?.dramas)) {
+        setShows(response.data?.dramas);
       } else {
         console.warn("Invalid response format:", response.data);
         setShows([]);
@@ -54,7 +56,7 @@ const Shows = () => {
       setLoading(true);
 
       const response = await axios.get(
-        "https://tarua-server.onrender.com/api/show/create-detail"
+        BASENDPOINT + `/show/create-detail`
       );
 
       if (response.data) {
@@ -102,13 +104,9 @@ const Shows = () => {
         time,
       };
 
-      await axios.post(
-        "https://tarua-server.onrender.com/api/show/create",
-        showData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      await axios.post(BASENDPOINT + `/show/create`, showData, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       alert("Show created successfully.");
 
@@ -153,24 +151,27 @@ const Shows = () => {
             </thead>
             <tbody>
               {shows?.length > 0 ? (
-                shows?.map((data, index) => (
-                  <tr
-                    onScroll={(e) => {
-                      const isBottom =
-                        e.target.scrollHeight - e.target.scrollTop ===
-                        e.target.clientHeight;
-                    }}
-                    key={index}
-                  >
-                    <td>{data?.drama?.title}</td>
-                    <td className="truncate">{data?.drama?.director}</td>
-                    <td className="truncate">{data?.venue?.name}</td>
-                    <td className="truncate">
-                      {getMonth(data?.date)} {getDateNum(data?.date)},{" "}
-                      {getShortYear(data?.date)}
-                    </td>
-                  </tr>
-                ))
+                shows?.map((data) =>
+                  data?.shows?.map((show, index) => (
+                    <tr
+                      onScroll={(e) => {
+                        const isBottom =
+                          e.target.scrollHeight - e.target.scrollTop ===
+                          e.target.clientHeight;
+                      }}
+                      key={index}
+                    >
+                      <td className="truncate" title={data?.dramaTitle}>{data?.dramaTitle}</td>
+                      <td className="truncate" title={data?.director}>{data?.director}</td>
+                      <td className="truncate" title={show?.venueName}>{show?.venueName}</td>
+                      <td className="truncate">
+                        {show?.dates?.map((date, index) => (
+                          <span className="row_date" key={index}>{getDateNum(date?.date)}</span>
+                        ))}
+                      </td>
+                    </tr>
+                  ))
+                )
               ) : (
                 <tr>
                   <td colSpan="3">No results found</td>

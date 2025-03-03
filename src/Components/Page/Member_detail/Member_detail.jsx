@@ -1,109 +1,108 @@
 import "./Member_detail.scss";
 import img01 from "../../../../public/images/33.jpg";
-import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { MdMail } from "react-icons/md";
+import { FaPhone } from "react-icons/fa";
+import { Link, useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import { BASENDPOINT } from "../../../variable";
 
 const Member_detail = () => {
+  const [loading, setLoading] = useState(false);
+  const [member, setMember] = useState([]);
+  const { id } = useParams();
+  console.log(member);
+
+  const fetchMember = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        BASENDPOINT + `/member/${id}`
+      );
+
+      if (response.data) {
+        setMember(response.data);
+      } else {
+        console.warn("Invalid response format:", response.data);
+        setMember([]);
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching shows:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMember();
+  }, [fetchMember]);
   return (
     <div className="member_detail container">
       <div className="top">
-        <h2>Saul Goodman</h2>
-        <h6>Actor</h6>
+        <h2>{member?.name || "Saul Goodman"}</h2>
+        <h6>
+          {member?.role?.map((r, index) => (
+            <span key={index}>
+              {r}
+              {index < member?.role?.length - 1 && " | "}
+            </span>
+          )) || "Actor"}
+        </h6>
       </div>
       <div className="content">
         <div className="left">
-          <img src={img01} alt="" />
+          <img src={member?.image || img01} alt="" />
           <div className="performance">
             <h5 className="detail_header">Performance</h5>
             <ul>
-              <li>Adam Surot</li>
-              <li>Lorem, ipsum dolor</li>
-              <li>Lorem, ipsum</li>
-              <li>Loremum</li>
-              <li>Lorem ipsum dolor sit</li>
-              <li>Loremum</li>
-              <li>Lorem, ipsum</li>
-              <li>Lorem, ipsum dolor</li>
-              <li>Lorem dolor sit</li>
+              {member?.performance &&
+                member?.performance?.map((p, i) => <li key={i}>{p}</li>)}
             </ul>
           </div>
         </div>
         <div className="right">
           <div className="detail_about">
             <h5 className="detail_header">About</h5>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi,
-              corporis aperiam? Aliquam dicta non aliquid repellat voluptatum
-              eligendi quae exercitationem ad debitis assumenda vero quisquam
-              hic veritatis magnam aperiam provident dolorem id reiciendis,
-              minima maiores voluptates culpa temporibus suscipit magnam
-              repellat quidem ducimus animi nobis soluta provident nulla <br />
-              autem accusantium ratione quaerat quis? Corrupti adipisci modi
-              unde, eius, nam, amet neque harum voluptatem eos sapiente est
-              facilis a obcaecati. Provident quas architecto voluptas,
-              consectetur molestiae tempora deleniti magni quam quasi eius eum
-              dolores iusto, cumque facere? Eligendi ducimus obcaecati ipsa
-              consequuntur rerum quas illo. Perspiciatis cumque quibusdam
-              eveniet qui modi, itaque nisi alias minima dolor molestiae,
-              accusamus totam unde, illo eos mollitia amet. Quis commodi
-              obcaecati architecto rem placeat aliquid cum, nesciunt magnam?
-              Ipsam distinctio ab omnis suscipit?
-            </p>
+            {member?.description?.map((d, index) => (
+              <p key={index}>{d}</p>
+            ))}
           </div>
           <div className="award">
             <h5 className="detail_header">Media & Awards</h5>
-            <div className="item">
-              <div className="title">
-                <h2>2015</h2> <div className="line" />
-                <div className="dot" />
-              </div>
-              <div className="desc">
-                <div className="left_item"></div>
-                <div className="right_item">
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Nisi est nesciunt illo officiis illum quia ipsa placeat amet
-                    nihil nostrum molestias autem nemo assumenda recusandae,
-                    repellat magni esse ad facere.
-                  </p>
+            {member?.mediaAwards &&
+              member?.mediaAwards?.map((d, index) => (
+                <div key={index} className="item">
+                  <div className="title">
+                    <h2>{d?.year}</h2> <div className="line" />
+                    <div className="dot" />
+                  </div>
+                  <div className="desc">
+                    <div className="left_item"></div>
+                    <div className="right_item">
+                      <p>{d?.description}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="item">
-              <div className="title">
-                <h2>2020</h2> <div className="line" />
-                <div className="dot" />
-              </div>
-              <div className="desc">
-                <div className="left_item"></div>
-                <div className="right_item">
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Nisi est nesciunt illo officiis illum quia ipsa placeat amet
-                    nihil nostrum molestias autem nemo assumenda recusandae,
-                    repellat magni esse ad facere.
-                  </p>
-                </div>
-              </div>
-            </div>
+              ))}
           </div>
           <div className="detail_contact">
             <h5 className="detail_header">Contact</h5>
             <ul>
               <li>
-                <Link to="#">
-                  <FaFacebookF className="icon" />
-                </Link>
+                <span className="mail">
+                  <MdMail className="icon" />
+                  <span>{member?.email || "tarua.academy@gmail.com"}</span>
+                </span>
               </li>
               <li>
-                <Link to="#">
-                  <FaInstagram className="icon" />
-                </Link>
-              </li>
-              <li>
-                <Link to="#">
-                  <FaTwitter className="icon" />
-                </Link>
+                <span to="#" className="mail">
+                  <FaPhone className="icon" />
+                  <span>{member?.phone || "+01230000000"}</span>
+                </span>
               </li>
             </ul>
           </div>

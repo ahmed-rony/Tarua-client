@@ -6,34 +6,22 @@ import CreateShowContext from "../../../Utils/Reducers/CreateShow_Reducer";
 import CreateDramaContext from "../../../Utils/Reducers/CreateDrama_Reducer";
 import { BASENDPOINT, UPLOAD_CLOUDINARY } from "../../../../variable";
 
-function getMonth(dateProp) {
-  const date = new Date(dateProp);
-  return date.toLocaleDateString("en-GB", { month: "short" }); // "Feb"
-}
-
-function getDateNum(dateProp) {
-  const date = new Date(dateProp);
-  return date.toLocaleDateString("en-GB", { day: "2-digit" }); // "15"
-}
-function getShortYear(dateString) {
-  const year = new Date(dateString).getFullYear(); // Extract full year (e.g., 2025)
-  return year.toString().slice(-2); // Return last two digits of the year
-}
-
 const Drama = () => {
   const [loading, setLoading] = useState(false);
   const [drama, setDrama] = useState([]);
+  const [info, setInfo] = useState([]);
   const [image, setImage] = useState(null);
   const [files, setFiles] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const { state, dispatch } = useContext(CreateDramaContext);
+  console.log(drama);
 
   const fetchDrama = useCallback(async () => {
     try {
       setLoading(true);
 
       const response = await axios.get(
-        "https://tarua-server.onrender.com/api/drama/getAllDramas"
+        BASENDPOINT + `/drama/getAllDramas`
       );
 
       if (response.data) {
@@ -52,17 +40,43 @@ const Drama = () => {
     }
   }, []);
 
+  const fetchMemberDetails = useCallback(async () => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        BASENDPOINT + `/member/get-member`
+      );
+
+      if (response.data) {
+        setInfo(response.data);
+      } else {
+        console.warn("Invalid response format:", response.data);
+        setInfo([]);
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching shows:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchDrama();
-  }, [fetchDrama]);
+    fetchMemberDetails();
+  }, [fetchDrama, fetchMemberDetails]);
 
   const handleChange = (e, index = null, field = null) => {
     const { name, value } = e.target;
 
-    if (name === "description" || name === "designers" || name === "actors") {
+    if (name === "description") {
       const transformedArray = value
         .split(/\n+/)
         .filter((line) => line.trim() !== "");
+
       dispatch({
         type: "UPDATE_FIELD",
         payload: {
@@ -72,10 +86,29 @@ const Drama = () => {
           rawData: value,
         },
       });
-    } else if (field && index !== null) {
+    } else if (
+      name === "actors" ||
+      name === "designers" ||
+      name === "director"
+    ) {
+      const selectedItem = {
+        id: value,
+        name: e.target.selectedOptions[0]?.text,
+      };
+
+      dispatch({
+        type: "TOGGLE_SELECTION",
+        payload: { field: name, item: selectedItem },
+      });
+    } else if (index !== null && field) {
+      // Handles media awards update
       dispatch({
         type: "UPDATE_MEDIA_AWARD",
-        payload: { index, field, value },
+        payload: {
+          index,
+          field,
+          value,
+        },
       });
     } else {
       dispatch({ type: "CHANGE_INPUT", payload: { name, value } });
@@ -84,7 +117,7 @@ const Drama = () => {
 
   const handleImageUpload = (e) => {
     const fileList = Array.from(e.target.files);
-    if (fileList.length > 0) {
+    if (fileList?.length > 0) {
       setFiles(fileList);
     } else {
       console.error("No files selected");
@@ -114,7 +147,10 @@ const Drama = () => {
         formData
       );
 
-      if (!uploadResponse.data.image || !uploadResponse.data.dramaPics.length) {
+      if (
+        !uploadResponse.data.image ||
+        !uploadResponse.data.dramaPics?.length
+      ) {
         throw new Error("Image upload successful, but no URLs returned.");
       }
 
@@ -143,7 +179,7 @@ const Drama = () => {
       setFiles([]);
       fetchDrama();
       setModalOpen(false);
-    //   window.location.reload();
+      //   window.location.reload();
     } catch (error) {
       console.error("Error creating drama:", error);
       alert("Failed to create the drama. Please try again.");
@@ -171,7 +207,6 @@ const Drama = () => {
             </button>
           </div>
 
-          {/* Data Table */}
           <table className="data-table">
             <thead>
               <tr>
@@ -191,9 +226,13 @@ const Drama = () => {
                     }}
                     key={index}
                   >
-                    <td>{data?.title}</td>
-                    <td className="truncate">{data?.director}</td>
-                    <td className="truncate">{data?.shows.length}</td>
+                    <td className="truncate">{data?.title}</td>
+                    <td className="truncate">
+                      {data?.director?.map((d, i) => (
+                        <span key={i}>{d.name}</span>
+                      ))}
+                    </td>
+                    <td className="truncate">{data?.shows?.length}</td>
                   </tr>
                 ))
               ) : (
@@ -209,7 +248,7 @@ const Drama = () => {
         <Modal open={modalOpen} onClose={() => setModalOpen(false)} center>
           <div className="new_project">
             <div>
-              <h1>Add Show</h1>
+              <h1>Add Drama</h1>
               <div className="project">
                 <div className="left">
                   <div className="item">
@@ -223,14 +262,37 @@ const Drama = () => {
                     />
                   </div>
                   <div className="item">
-                    <label htmlFor="">Director</label>
-                    <input
-                      name="director"
-                      type="text"
-                      placeholder="director's name"
-                      value={state?.director || ""}
-                      onChange={handleChange}
-                    />
+                    <label>Director</label>
+                    <select name="director" onChange={handleChange} value="">
+                      <option value="" disabled>
+                        Choose A Director
+                      </option>
+                      {info?.map((data) => (
+                        <option key={data._id} value={data._id}>
+                          {data.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Display selected actors */}
+                    <div className="selected-items">
+                      <div className="selected-item">
+                        {state.director.map((item) => (
+                          <button
+                            key={item.id}
+                            className="event_btn"
+                            onClick={() =>
+                              dispatch({
+                                type: "TOGGLE_SELECTION",
+                                payload: { field: "director", item },
+                              })
+                            }
+                          >
+                            {item.name} ❌
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <div className="item">
                     <label htmlFor="">Director's Word</label>
@@ -305,28 +367,75 @@ const Drama = () => {
                 </div>
                 <div className="right">
                   <div className="item">
-                    <label htmlFor="">Actors</label>
-                    <textarea
-                      name="actors"
-                      cols="30"
-                      rows="6"
-                      placeholder="actors name (line break for multiple names)"
-                      value={state?.rawActors || ""}
-                      onChange={handleChange}
-                    ></textarea>
+                    <label>Actors</label>
+                    <select name="actors" onChange={handleChange} value="">
+                      <option value="" disabled>
+                        Choose An Actor
+                      </option>
+                      {info?.map((data) => (
+                        <option key={data._id} value={data._id}>
+                          {data.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Display selected actors */}
+                    <div className="selected-items">
+                      <div className="selected-item">
+                        {state.actors.map((item) => (
+                          <button
+                            key={item.id}
+                            className="event_btn"
+                            onClick={() =>
+                              dispatch({
+                                type: "TOGGLE_SELECTION",
+                                payload: { field: "actors", item },
+                              })
+                            }
+                          >
+                            {item.name} ❌
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   <div className="item">
-                    <label htmlFor="">Designers</label>
-                    <textarea
-                      name="designers"
-                      cols="30"
-                      rows="6"
-                      placeholder="designers name (line break for multiple names)"
-                      value={state?.rawDesigners || ""}
-                      onChange={handleChange}
-                    ></textarea>
+                    <label>Designers</label>
+                    <select name="designers" onChange={handleChange} value="">
+                      <option value="" disabled>
+                        Choose A Designer
+                      </option>
+                      {info?.map((data) => (
+                        <option key={data._id} value={data._id}>
+                          {data.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Display selected actors */}
+                    {state?.designers?.length > 0 && (
+                      <div className="selected-items">
+                        <div className="selected-item">
+                          {state.designers.map((item) => (
+                            <button
+                              key={item.id}
+                              className="event_btn"
+                              onClick={() =>
+                                dispatch({
+                                  type: "TOGGLE_SELECTION",
+                                  payload: { field: "designers", item },
+                                })
+                              }
+                            >
+                              {item.name} ❌
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
+
                   <div className="item">
                     <label htmlFor="">Description</label>
                     <textarea

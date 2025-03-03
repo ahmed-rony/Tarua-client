@@ -8,6 +8,7 @@ import img06 from "../../../../public/images/39.jpg";
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { BASENDPOINT } from "../../../variable";
 
 const Play_sec = () => {
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ const Play_sec = () => {
       setLoading(true);
 
       const response = await axios.get(
-        `https://tarua-server.onrender.com/api/drama/getAllDramas`
+        BASENDPOINT + `/drama/getAllDramas`
       );
 
       if (response.data) {
@@ -48,7 +49,7 @@ const Play_sec = () => {
         {/* <div className="line"/><div className="dot"/> */}
       </div>
       <div className="row">
-        {drama?.map((data, index) => (
+        {drama?.slice(0, 3).map((data, index) => (
           <Link
             key={index}
             to={`/play/${data?._id}`}

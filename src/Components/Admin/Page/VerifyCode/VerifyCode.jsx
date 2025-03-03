@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./VerifyCode.scss";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
+import { BASENDPOINT } from "../../../../variable";
 
 const VerifyCode = () => {
   const [code, setCode] = useState("");
@@ -19,7 +20,7 @@ const VerifyCode = () => {
 
     try {
       const response = await axios.post(
-        "https://tarua-server.onrender.com/api/booking/verify-ticket",
+        BASENDPOINT + `/booking/verify-ticket`,
         { confirmationCode: code },
         {
           headers: { "Content-Type": "application/json" },

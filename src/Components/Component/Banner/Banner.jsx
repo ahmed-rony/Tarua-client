@@ -14,9 +14,7 @@ const Banner = () => {
             <p>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit.
               Consectetur velit doloribus et omnis earum enim suscipit neque
-              quam? Dolorum aliquam harum laborum fuga eum, sint aliquid nostrum
-              officiis? Quasi repellat beatae corporis cumque? Iusto pariatur
-              quia ratione magni optio explicabo!
+              quam? Dolorum aliquam harum laborum fuga eum!
             </p>
           </div>
           <div className="right">

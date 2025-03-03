@@ -4,18 +4,18 @@ import img02 from "../../../../public/images/37.jpg";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
+import { BASENDPOINT } from "../../../variable";
 
 const Event = () => {
   const [loading, setLoading] = useState(false);
   const [shows, setShows] = useState([]);
 
-  console.log(shows);
   const fetchShows = useCallback(async () => {
     try {
       setLoading(true);
 
       const response = await axios.get(
-        "https://tarua-server.onrender.com/api/drama/getDramasWithShows"
+        BASENDPOINT + `/drama/getDramasWithShows`
       );
 
       if (response.data && Array.isArray(response.data)) {

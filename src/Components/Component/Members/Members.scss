@@ -2,11 +2,13 @@
 
 .member {
   @include themed {
-    padding-top: 120px;
+    padding-top: 80px;
     display: flex;
     flex-direction: column;
+    padding-bottom: 100px;
     @include tablet {
       padding-top: 60px;
+      padding-bottom: 60px;
     }
 
     .owner {

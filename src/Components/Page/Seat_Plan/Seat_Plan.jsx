@@ -4,10 +4,10 @@ import Stairs from "../../Component/Stairs/Stairs";
 import { Ticket } from "../../Utils/Ticket";
 import "./Seat_Plan.scss";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import ShowContext from "../../Utils/Reducers/Ticket_Reducer";
-import ExperimentalHall from "../../Component/Footer/ExperimentalHall";
-import { EXPERIMENTAL_HALL } from "../../../variable";
+import ExperimentalHall from "../../Component/ExperimentalHall/ExperimentalHall";
+import { BASENDPOINT, EXPERIMENTAL_HALL } from "../../../variable";
 import PayMessageModal from "../../Component/PayMessageModal/PayMessageModal";
 
 export function getMonth(dateProp) {
@@ -35,6 +35,7 @@ const Seat_Plan = () => {
   const [shows, setShows] = useState([]);
   const [seats, setSeats] = useState([]);
   const { showId } = useParams();
+  const location = useLocation();
   const { state, dispatch } = useContext(ShowContext);
   const {
     selectedDate,
@@ -66,7 +67,7 @@ const Seat_Plan = () => {
       setLoading(true);
 
       const response = await axios.get(
-        `https://tarua-server.onrender.com/api/show/${showId}`
+        BASENDPOINT + `/show/${showId}`
       );
 
       if (response.data) {
@@ -93,7 +94,7 @@ const Seat_Plan = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://tarua-server.onrender.com/api/venues/${state?.selectedShowId}/${selectedTime}`
+        BASENDPOINT + `/venues/${state?.selectedShowId}/${selectedTime}`
       );
 
       if (response.data) {
@@ -123,6 +124,13 @@ const Seat_Plan = () => {
     fetchVenueSeats();
   }, [fetchVenueSeats]);
 
+  useEffect(() => {
+    return () => {
+      // Reset state only if leaving the ticket page
+      dispatch({ type: "RESET_FORM" });
+    };
+  }, [location.pathname]);
+
   const handleSubmit = async () => {
     setLoading(true);
 
@@ -145,7 +153,7 @@ const Seat_Plan = () => {
       };
 
       const response = await axios.post(
-        "https://tarua-server.onrender.com/api/booking/apply",
+        BASENDPOINT + `/booking/apply`,
         bookingData,
         {
           headers: { "Content-Type": "application/json" },
@@ -221,7 +229,7 @@ const Seat_Plan = () => {
           )}
         </div>
         <div className="auditorium">
-          <h5 className="detail_header">Select Seat</h5>
+          {selectedTime && <h5 className="detail_header">Select Seat</h5>}
           {selectedTime && seats?.hall === EXPERIMENTAL_HALL && (
             <ExperimentalHall seats={seats} />
             // <div className="auditorium_margin_seats">

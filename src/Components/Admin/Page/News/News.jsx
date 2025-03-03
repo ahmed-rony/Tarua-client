@@ -26,15 +26,14 @@ const News = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { state, dispatch } = useContext(CreateNewsContext);
   // console.log(state);
-  
 
   const fetchNews = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get("https://tarua-server.onrender.com/api/news");
+      const response = await axios.get(BASENDPOINT + `/news`);
 
-      if (response.data ) {
+      if (response.data) {
         setNews(response.data);
       } else {
         console.warn("Invalid response format:", response.data);
@@ -95,7 +94,7 @@ const News = () => {
       };
 
       console.log(newsData);
-      
+
       // ✅ Send drama data to backend
       const projectResponse = await axios.post(
         BASENDPOINT + "/news/create",
@@ -138,7 +137,6 @@ const News = () => {
             </button>
           </div>
 
-          {/* Data Table */}
           <table className="data-table">
             <thead>
               <tr>

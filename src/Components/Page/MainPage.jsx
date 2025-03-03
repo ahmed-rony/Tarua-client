@@ -17,6 +17,9 @@ import VerifyCode from "../Admin/Page/VerifyCode/VerifyCode";
 import Drama from "../Admin/Page/Drama/Drama";
 import News from "../Admin/Page/News/News";
 import Dashboard from "../Admin/Page/Dashboard/Dashboard";
+import Member from "../Admin/Page/Member/Member";
+import MembersList from "./MembersList/MembersList";
+import PrivateBookingRoutes from "../Utils/Hooks/PrivateBookingRoutes";
 
 const MainPage = () => {
   return (
@@ -31,13 +34,20 @@ const MainPage = () => {
             <Route path="/play/:id" element={<Play_detail />} />
             <Route path="/news" element={<Blog_list />} />
             <Route path="/event" element={<Event />} />
-            <Route path="/event/:showId" element={<Seat_Plan />} />
+            <Route path="/members" element={<MembersList />} />
             <Route path="/123/admin/login" element={<Login />} />
             <Route path="*" element={<Page404 />} />
 
+            {/* Private Routes For Booking */}
+            <Route element={<PrivateBookingRoutes />}>
+              <Route path="/event/:showId" element={<Seat_Plan />} />
+            </Route>
+
+            {/* Private Routes For Admin */}
             <Route element={<PrivateRoute />}>
               <Route path="/123/admin/dashboard" element={<Dashboard />} />
               <Route path="/123/admin/shows" element={<Shows />} />
+              <Route path="/123/admin/member" element={<Member />} />
               <Route path="/123/admin/news" element={<News />} />
               <Route path="/123/admin/dramas" element={<Drama />} />
               <Route path="/123/admin/bookings" element={<Bookings />} />

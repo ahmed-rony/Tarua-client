@@ -1,10 +1,21 @@
-.stairs{
+@import "../../../style.scss";
+
+
+.stairs {
+  @include themed {
     display: flex;
     flex-direction: column;
-    .step{
-        width: 45px;
-        height: 13px;
-        border: 1px solid #bcbcbc;
-        // background: rgb(28, 177, 43);
+//     @include mobile {
+//         transform: scale(0.5);
+//         -webkit-transform: scale(0.5);
+//         -moz-transform: scale(0.5);
+//         -ms-transform: scale(0.5);
+//         -o-transform: scale(0.5);
+// }
+    .step {
+      width: 45px;
+      height: 13px;
+      border: 1px solid #bcbcbc;
     }
+  }
 }

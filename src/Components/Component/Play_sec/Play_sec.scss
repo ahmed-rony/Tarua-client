@@ -43,7 +43,9 @@
       position: absolute;
       left: -100%;
       @include mobile {
-        padding: 20px;
+        padding: 10px;
+        left: 0;
+        bottom: 10px;
       }
       h4 {
         display: flex;
@@ -53,7 +55,7 @@
         font-weight: 400;
         gap: 5px;
         @include mobile {
-          font-size: 16px;
+          font-size: 14px;
         }
         span {
           font-size: 10px;

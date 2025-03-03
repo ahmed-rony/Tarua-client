@@ -3,20 +3,21 @@ import "./Upcoming.scss";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { getDateNum, getMonth } from "../../Page/Seat_Plan/Seat_Plan";
+import { BASENDPOINT } from "../../../variable";
 
 const Upcoming = () => {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState([]);
-  console.log(show);
+  // console.log(show);
 
   const fetchShow = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(`https://tarua-server.onrender.com/api/show`);
+      const response = await axios.get(BASENDPOINT + `/show`);
 
-      if (response.data?.shows) {
-        setShow(response.data?.shows);
+      if (response.data?.dramas) {
+        setShow(response.data?.dramas);
       } else {
         console.warn("Invalid response format:", response.data);
         setShow([]);
@@ -43,40 +44,84 @@ const Upcoming = () => {
           {/* <div className="line"/><div className="dot"/> */}
         </div>
         {show &&
-          show?.map((data, index) => (
-            <div key={index} className="content">
-              <div className="item1">
-                <div className="date">
-                  <h4>{getDateNum(data?.date) || "00"}</h4>
-                  <span>{getMonth(data?.date) || "month"}</span>
+          show?.map((datas) =>
+            datas?.shows?.map((data, index) => (
+              <div key={index}>
+                <div className="content">
+                  <div className="item1">
+                    {data?.dates &&
+                      data?.dates?.map((date, index) => (
+                        <div key={index} className="date">
+                          <h4>{getDateNum(date?.date) || "00"}</h4>
+                          <span>{getMonth(date?.date) || "month"}</span>
+                        </div>
+                      ))}
+                  </div>
+                  <div className="item2">
+                    <div className="play">
+                      <h4>{datas?.dramaTitle}</h4>
+                      <h5>
+                        Drama / {data?.venueName} / {data?.hall}
+                      </h5>
+                    </div>
+                  </div>
+                  <div className="item3">
+                    <div className="info">
+                      <Link
+                        to={`/play/${datas?.dramaId}`}
+                        className="read event_btn"
+                      >
+                        Read More
+                      </Link>
+                      <Link
+                        to={`/event/${datas?.dramaId}`}
+                        className="ticket event_btn"
+                      >
+                        Get Ticket
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                <div className="content_mbl">
+                  <div className="top">
+                    <div className="item1">
+                      {data?.dates &&
+                        data?.dates?.map((date, index) => (
+                          <div key={index} className="date">
+                            <h4>{getDateNum(date?.date) || "00"}</h4>
+                            <span>{getMonth(date?.date) || "month"}</span>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="item2">
+                      <div className="play">
+                        <h4>{datas?.dramaTitle}</h4>
+                        <h5>
+                          Drama / {data?.venueName} / {data?.hall}
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="item3">
+                    <div className="info">
+                      <Link
+                        to={`/play/${datas?.dramaId}`}
+                        className="read event_btn"
+                      >
+                        Read More
+                      </Link>
+                      <Link
+                        to={`/event/${datas?.dramaId}`}
+                        className="ticket event_btn"
+                      >
+                        Get Ticket
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="item2">
-                <div className="play">
-                  <h4>{data?.drama?.title}</h4>
-                  <h5>
-                    Drama / {data?.venue?.name} / {data?.venue?.hall}
-                  </h5>
-                </div>
-              </div>
-              <div className="item3">
-                <div className="info">
-                  <Link
-                    to={`/play/${data?.drama?._id}`}
-                    className="read event_btn"
-                  >
-                    Read More
-                  </Link>
-                  <Link
-                    to={`/event/${data?.drama?._id}`}
-                    className="ticket event_btn"
-                  >
-                    Get Ticket
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
       </div>
     </>
   );

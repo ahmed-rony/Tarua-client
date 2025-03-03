@@ -6,15 +6,12 @@ const INITIAL_STATE = {
   rawDescription: "",
   image: "",
   dramaPics: [],
-  director: "",
-  designers: [],
-  rawDesigners: "",
-  actors: [],
-  rawActors: "",
+  director: [{ id: "", name: "" }],
+  actors: [{ id: "", name: "" }],
+  designers: [{ id: "", name: "" }],
+  mediaAwards: [{ year: "", description: "" }],
   directorsWord: "",
-  mediaAwards: [{ year: "", description: "" }], // Ensure an initial empty object
 };
-
 
 const CreateDramaContext = createContext(INITIAL_STATE);
 
@@ -29,35 +26,65 @@ const CreateDramaReducer = (state, action) => {
         [action.payload.field]: action.payload.data,
         [action.payload.rawField]: action.payload.rawData,
       };
+    case "ADD_MEDIA_AWARD":
+      return {
+        ...state,
+        mediaAwards: [...state.mediaAwards, { year: "", description: "" }], // Add an empty award
+      };
+    case "UPDATE_MEDIA_AWARD": {
+      const updatedMediaAwards = state.mediaAwards.map((award, i) =>
+        i === action.payload.index
+          ? { ...award, [action.payload.field]: action.payload.value }
+          : award
+      );
 
-      case "ADD_MEDIA_AWARD":
-        return {
-          ...state,
-          mediaAwards: [...state.mediaAwards, { year: "", description: "" }], // Add an empty award
-        };
-  
-      case "UPDATE_MEDIA_AWARD":
-        return {
-          ...state,
-          mediaAwards: state.mediaAwards.map((award, index) =>
-            index === action.payload.index
-              ? { ...award, [action.payload.field]: action.payload.value }
-              : award
-          ),
-        };
-  
-      case "REMOVE_MEDIA_AWARD":
-        return {
-          ...state,
-          mediaAwards: state.mediaAwards.filter((_, index) => index !== action.payload),
-        };
+      return { ...state, mediaAwards: updatedMediaAwards };
+    }
 
+    case "REMOVE_MEDIA_AWARD":
+      return {
+        ...state,
+        mediaAwards: state.mediaAwards.filter(
+          (_, index) => index !== action.payload
+        ),
+      };
     case "ADD_IMAGES":
       return {
         ...state,
         image: action.payload.projectCover || state.image,
         dramaPics: action.payload.uploadImg || state.dramaPics,
       };
+    case "ADD_ITEM":
+      return {
+        ...state,
+        [action.payload.field]: [
+          ...state[action.payload.field], // Spread the current items
+          action.payload.item, // Add the new item (actor)
+        ],
+      };
+
+    case "REMOVE_ITEM":
+      // Remove the actor by matching its 'id' field
+      return {
+        ...state,
+        [action.payload.field]: state[action.payload.field].filter(
+          (item) => item.id !== action.payload.id
+        ),
+      };
+      case "TOGGLE_SELECTION": {
+        const existingItems = state[action.payload.field];
+      
+        // Check if the item already exists, if yes, remove it
+        const updatedItems = existingItems.some((item) => item.id === action.payload.item.id)
+          ? existingItems.filter((item) => item.id !== action.payload.item.id)
+          : [...existingItems, action.payload.item];
+      
+        return {
+          ...state,
+          [action.payload.field]: updatedItems,
+        };
+      }
+      
 
     case "RESET_FORM":
       return INITIAL_STATE;

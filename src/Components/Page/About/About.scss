@@ -4,10 +4,11 @@
   @include themed {
     padding: 100px 0;
     display: flex;
-    .detail_header {
-    }
     .intro {
       display: flex;
+      @include mobile {
+        flex-direction: column;
+      }
 
       .left {
         flex: 1;
@@ -24,13 +25,20 @@
             left: -30px;
             width: 100%;
             height: 100%;
-            // z-index: -1;
+            @include mobile {
+              top: 10px;
+              left: -10px;
+            }
           }
         }
       }
       .right {
         flex: 1.7;
-        .pera {
+        @include mobile {
+          text-align: center;
+        }
+        .pera,
+        .pera_tab {
           gap: 10px;
           padding-left: 80px;
           display: flex;
@@ -39,8 +47,32 @@
           font-weight: 300;
           line-height: 36px;
           text-align: justify;
+          @include mobile {
+            padding-left: 0px;
+          }
           .detail_header {
             padding-bottom: 20px;
+            @include mobile {
+              text-align: center;
+              padding-top: 60px;
+            }
+          }
+        }
+        .pera {
+          @include tablet {
+            display: none;
+          }
+        }
+        .pera_tab {
+          display: none;
+          @include tablet {
+            display: flex;
+            padding-left: 30px;
+          }
+          @include mobile {
+            padding-left: 0;
+            font-size: 16px;
+            line-height: 22px;
           }
         }
       }
@@ -49,6 +81,7 @@
       display: flex;
       align-items: center;
       margin-top: 100px;
+
       .content {
         flex: 1;
         display: flex;
@@ -64,6 +97,14 @@
           padding-left: 30px;
           border-top: 1px solid #bcbcbc;
           padding-top: 30px;
+          @include tablet {
+            width: 80%;
+          }
+          @include mobile {
+            width: 90%;
+            padding-top: 10px;
+            padding-left: 10px;
+          }
         }
         h4 {
           display: flex;
@@ -73,11 +114,18 @@
           font-size: 20px;
           font-weight: 400;
           gap: 5px;
+          @include mobile {
+            font-size: 18px;
+          }
           span {
             font-size: 12px;
             font-weight: 300;
             text-transform: uppercase;
             letter-spacing: 5px;
+            @include mobile {
+              font-size: 10px;
+              letter-spacing: 3px;
+            }
           }
         }
       }
@@ -95,6 +143,12 @@
       background-attachment: fixed;
       position: relative;
       z-index: -1;
+      @include tablet {
+        height: 400px;
+      }
+      @include mobile {
+        height: 300px;
+      }
       &::after {
         content: "";
         position: absolute;
@@ -104,17 +158,16 @@
         height: 100%;
         background: rgba(0, 0, 0, 0.3);
       }
-      // .team{
-      //   width: 40%;
-      //   h4{
-      //     text-align: center;
-      //   }
-      // }
     }
     .award {
       width: 60%;
       align-self: center;
       margin-top: 80px;
+      @include tablet {
+        .title {
+          display: flex;
+        }
+      }
     }
   }
 }

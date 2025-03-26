@@ -2,11 +2,11 @@ import { createContext, useReducer, useMemo } from "react";
 
 const INITIAL_STATE = {
   title: "",
+  url: "",
   description: "",
   image: "",
   date: "",
 };
-
 
 const CreateNewsContext = createContext(INITIAL_STATE);
 
@@ -18,8 +18,10 @@ const CreateNewsReducer = (state, action) => {
     case "ADD_IMAGES":
       return {
         ...state,
-        image: action.payload.projectCover || state.image
+        image: action.payload.projectCover || state.image,
       };
+    case "SET_EDIT_NEWS": // ✅ Add this case
+      return { ...state, ...action.payload };
 
     case "RESET_FORM":
       return INITIAL_STATE;

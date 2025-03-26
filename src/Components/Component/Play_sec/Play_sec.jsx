@@ -1,10 +1,4 @@
 import "./Play_sec.scss";
-import img01 from "../../../../public/images/01.jpg";
-import img001 from "../../../../public/images/3.jpg";
-import img02 from "../../../../public/images/05.jpg";
-import img03 from "../../../../public/images/37.jpg";
-import img04 from "../../../../public/images/38.jpg";
-import img06 from "../../../../public/images/39.jpg";
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
@@ -14,14 +8,11 @@ const Play_sec = () => {
   const [loading, setLoading] = useState(false);
   const [drama, setDrama] = useState([]);
 
-
   const fetchDrama = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        BASENDPOINT + `/drama/getAllDramas`
-      );
+      const response = await axios.get(BASENDPOINT + `/drama/getAllDramas`);
 
       if (response.data) {
         setDrama(response.data);
@@ -44,10 +35,11 @@ const Play_sec = () => {
   }, [fetchDrama]);
   return (
     <div className="play_sec container">
-      <div className="title">
-        <h2>Our Productions</h2>
-        {/* <div className="line"/><div className="dot"/> */}
-      </div>
+      {drama?.length > 0 && (
+        <div className="title">
+          <h2>Our Productions</h2>
+        </div>
+      )}
       <div className="row">
         {drama?.slice(0, 3).map((data, index) => (
           <Link
@@ -58,7 +50,15 @@ const Play_sec = () => {
           >
             <div className="info">
               <h4>
-                {data?.title} <span>{data?.director}</span>
+                {data?.title}{" "}
+                <span>
+                  {data?.director?.map((d, i) => (
+                    <>
+                      <span key={i}>{d?.name}</span>
+                      {i < data?.director?.length - 1 && ", "}
+                    </>
+                  ))}
+                </span>
               </h4>
             </div>
           </Link>

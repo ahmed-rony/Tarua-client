@@ -22,3 +22,18 @@ export const News_Data = [
     },
   ];
   
+
+  export const slideImg = [
+    {pic: "/images/banner/01.jpg"},
+    {pic: "/images/banner/02.jpg"},
+    {pic: "/images/banner/03.jpg"},
+    {pic: "/images/banner/04.jpg"},
+    {pic: "/images/banner/05.jpg"},
+    {pic: "/images/banner/06.jpg"},
+    {pic: "/images/banner/07.jpg"},
+    {pic: "/images/banner/08.jpg"},
+    {pic: "/images/banner/09.jpg"},
+    {pic: "/images/banner/10.jpg"},
+    {pic: "/images/banner/11.jpg"},
+    {pic: "/images/banner/12.jpg"},
+  ];

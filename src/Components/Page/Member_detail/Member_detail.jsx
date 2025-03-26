@@ -17,9 +17,7 @@ const Member_detail = () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        BASENDPOINT + `/member/${id}`
-      );
+      const response = await axios.get(BASENDPOINT + `/member/${id}`);
 
       if (response.data) {
         setMember(response.data);
@@ -43,7 +41,7 @@ const Member_detail = () => {
   return (
     <div className="member_detail container">
       <div className="top">
-        <h2>{member?.name || "Saul Goodman"}</h2>
+        <h2>{member?.name || "--"}</h2>
         <h6>
           {member?.role?.map((r, index) => (
             <span key={index}>
@@ -72,8 +70,10 @@ const Member_detail = () => {
             ))}
           </div>
           <div className="award">
-            <h5 className="detail_header">Media & Awards</h5>
-            {member?.mediaAwards &&
+            {member?.mediaAwards?.length > 0 && (
+              <h5 className="detail_header">Media & Awards</h5>
+            )}
+            {member?.mediaAwards?.length > 0 &&
               member?.mediaAwards?.map((d, index) => (
                 <div key={index} className="item">
                   <div className="title">

@@ -4,6 +4,7 @@ import { News_Data } from "../../Utils/Datas/News";
 import { useEffect, useState } from "react";
 import { BASENDPOINT, NEWSPOINT } from "../../../variable";
 import axios from "axios";
+import { getDateNum, getFullYear, getMonth } from "../Seat_Plan/Seat_Plan";
 
 const Blog_list = () => {
   const [newsList, setNewsList] = useState([]);
@@ -11,8 +12,8 @@ const Blog_list = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // Track if there's more news to load
 
-  console.log(newsList);
-  
+  // console.log(newsList);
+
   // Fetch news when the user scrolls to the bottom of the page
   const fetchNews = async () => {
     if (loading || !hasMore) return;
@@ -23,7 +24,6 @@ const Blog_list = () => {
       const response = await axios.get(
         BASENDPOINT + NEWSPOINT + `?skip=${skip}`
       );
-
 
       if (response.data.length === 0) {
         setHasMore(false); // No more data to load
@@ -72,22 +72,25 @@ const Blog_list = () => {
         <h6>About Tarua</h6>
       </div>
       <div className="content">
-        {News_Data?.map((item, index) => (
+        {newsList?.map((item, index) => (
           <div className="item" key={index}>
             <div className="info">
               <Link
-                to={item?.link}
+                to={item?.url}
                 className="details_info"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>{item?.date}</span>
+                <span>
+                  {getMonth(item?.date)} {getDateNum(item?.date)},{" "}
+                  {getFullYear(item?.date)}
+                </span>
                 <h4>{item?.title}</h4>
                 <p>{item?.description}</p>
               </Link>
             </div>
             <Link
-              to={item.link}
+              to={item?.url}
               className="image"
               target="_blank"
               rel="noopener noreferrer"

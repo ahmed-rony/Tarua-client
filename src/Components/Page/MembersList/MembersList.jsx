@@ -1,9 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import img01 from "../../../../public/images/14.jpg";
-import img02 from "../../../../public/images/36.jpg";
-import img03 from "../../../../public/images/30.jpg";
-import img04 from "../../../../public/images/31.jpg";
+import img01 from "../../../../public/images/32.jpg";
 import axios from "axios";
 import { BASENDPOINT } from "../../../variable";
 
@@ -51,33 +48,6 @@ const MembersList = () => {
               <img src={m?.image || img01} alt="" />
             </Link>
           ))}
-          <Link to="/about/1" className="f_link">
-            <img src={img02} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img03} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img04} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img02} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img01} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img04} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img03} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img01} alt="" />
-          </Link>
-          <Link to="/about/1" className="f_link">
-            <img src={img04} alt="" />
-          </Link>
         </div>
       </div>
     </div>

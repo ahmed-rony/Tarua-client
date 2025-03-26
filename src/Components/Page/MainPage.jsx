@@ -39,8 +39,8 @@ const MainPage = () => {
             <Route path="*" element={<Page404 />} />
 
             {/* Private Routes For Booking */}
-            <Route element={<PrivateBookingRoutes />}>
               <Route path="/event/:showId" element={<Seat_Plan />} />
+            <Route element={<PrivateBookingRoutes />}>
             </Route>
 
             {/* Private Routes For Admin */}

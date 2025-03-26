@@ -12,6 +12,7 @@ const Member = () => {
   const [editMode, setEditMode] = useState(false);
   const { state, dispatch } = useContext(CreateMemberContext);
   const [image, setImage] = useState(null);
+  
 
   const fetchMembers = useCallback(async () => {
     try {

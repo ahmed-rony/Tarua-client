@@ -11,7 +11,7 @@ const Play_detail = () => {
   const [loading, setLoading] = useState(false);
   const [drama, setDrama] = useState([]);
   const { id } = useParams();
-  console.log(drama);
+  // console.log(drama);
 
   const fetchDrama = useCallback(async () => {
     try {
@@ -52,15 +52,15 @@ const Play_detail = () => {
           <div className="event_img">
             <img src={drama?.image} alt="event image" />
           </div>
-          <div className="item1">
-            {drama?.shows &&
+          {drama?.shows?.length > 0 && <div className="item1">
+            {drama?.shows?.length > 0 &&
               drama?.shows?.[0]?.dates?.map((date, index) => (
                 <div key={index} className="date">
                   <h4>{getDateNum(date) || "00"}</h4>
                   <span>{getMonth(date) || "month"}</span>
                 </div>
               ))}
-          </div>
+          </div>}
         </div>
         <div className="content">
           <div className="left">
@@ -126,7 +126,7 @@ const Play_detail = () => {
               <p>{drama?.directorsWord}</p>
             </div>
             <div className="award">
-              <h5 className="detail_header">Media & Awards</h5>
+              {drama?.mediaAwards?.length > 0 && <h5 className="detail_header">Media & Awards</h5>}
               {drama?.mediaAwards &&
                 drama?.mediaAwards?.map((d, index) => (
                   <div key={index} className="item">

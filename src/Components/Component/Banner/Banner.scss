@@ -2,27 +2,38 @@
 
 .banner {
   @include themed {
-    background-position: calc(50% - 0px) 35%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    &::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.3);
-    }
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      inset: 0;
-    }
-    .content {
-      display: flex;
+    position: relative;
+
+    .slide_img {
+      width: 100%;
       height: calc(100vh - 90px);
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        inset: 0;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .content {
+      position: absolute;
+      top: 50%;
+      display: flex;
       gap: 30px;
       @include tablet {
         height: calc(70vh - 90px);
@@ -30,7 +41,6 @@
       @include mobile {
         height: calc(90vh - 90px);
       }
-      
 
       .left {
         flex: 1;
@@ -40,7 +50,7 @@
         align-items: center;
         gap: 30px;
         z-index: 1;
-        
+
         h1 {
           font-size: 70px;
           font-weight: 300;
@@ -54,7 +64,6 @@
             font-size: 40px;
             line-height: 55px;
             padding: 0 20px;
-            
           }
           span {
             font-size: 90px;
@@ -75,6 +84,7 @@
         p {
           font-size: 20px;
           font-weight: 300;
+          // padding-right: 40px;
           @include tablet {
             text-align: center;
             padding: 0 40px;
@@ -116,6 +126,11 @@
         //     linear-gradient(0deg, #101010 0%, rgba(0, 0, 0, 0) 20%);
         // }
       }
-    }
+      transform: translateY(-50%);
+      -webkit-transform: translateY(-50%);
+      -moz-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      -o-transform: translateY(-50%);
+}
   }
 }

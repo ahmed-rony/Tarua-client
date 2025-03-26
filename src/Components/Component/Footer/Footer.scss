@@ -18,11 +18,12 @@
           @include mobile {
             text-align: center;
           }
-          .logo {
-            font-size: 36px;
-            @include mobile {
-              
-              font-size: 40px;
+          .logo{
+            img{
+              width: 80px;
+              @include mobile {
+                width: 60px;
+              }
             }
           }
         }
@@ -40,6 +41,7 @@
             
             .col {
               width: 100%;
+
 
               .heading {
                 font-size: 18px;

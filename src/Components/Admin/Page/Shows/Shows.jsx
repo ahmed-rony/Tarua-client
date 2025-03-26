@@ -5,38 +5,28 @@ import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import CreateShowContext from "../../../Utils/Reducers/CreateShow_Reducer";
 import { BASENDPOINT } from "../../../../variable";
+import { getDateNum, getFormattedDate } from "../../../Page/Seat_Plan/Seat_Plan";
 
-function getMonth(dateProp) {
-  const date = new Date(dateProp);
-  return date.toLocaleDateString("en-GB", { month: "short" }); // "Feb"
-}
 
-function getDateNum(dateProp) {
-  const date = new Date(dateProp);
-  return date.toLocaleDateString("en-GB", { day: "2-digit" }); // "15"
-}
-function getShortYear(dateString) {
-  const year = new Date(dateString).getFullYear(); // Extract full year (e.g., 2025)
-  return year.toString().slice(-2); // Return last two digits of the year
-}
+
 
 const Shows = () => {
   const [loading, setLoading] = useState(false);
   const [shows, setShows] = useState([]);
   const [info, setInfo] = useState([]);
+  const [editMode, setEditMode] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const { state, dispatch } = useContext(CreateShowContext);
   const { dramaId, venueId, maxCapacity, date, time } = state;
-  // console.log(shows);
 
   const fetchShows = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get( BASENDPOINT + `/show`);
+      const response = await axios.get(BASENDPOINT + `/show/get-shows`);
 
-      if (response.data && Array.isArray(response.data?.dramas)) {
-        setShows(response.data?.dramas);
+      if (response.data && Array.isArray(response.data)) {
+        setShows(response.data);
       } else {
         console.warn("Invalid response format:", response.data);
         setShows([]);
@@ -55,9 +45,7 @@ const Shows = () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        BASENDPOINT + `/show/create-detail`
-      );
+      const response = await axios.get(BASENDPOINT + `/show/create-detail`);
 
       if (response.data) {
         setInfo(response.data);
@@ -96,28 +84,63 @@ const Shows = () => {
     setLoading(true);
 
     try {
+      // ✅ Prepare show data
       const showData = {
-        dramaId,
-        venueId,
-        maxCapacity,
-        date,
-        time,
+        dramaId: dramaId || state.dramaId,
+        venueId: venueId || state.venueId,
+        maxCapacity: maxCapacity || state.maxCapacity,
+        date: date || state.date,
+        time: time || state.time,
       };
+      console.log("showdata",state._id);
+      
 
-      await axios.post(BASENDPOINT + `/show/create`, showData, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      alert("Show created successfully.");
+      // ✅ Determine whether to update or create a show
+      if (editMode) {
+        await axios.patch(`${BASENDPOINT}/show/update/${state._id}`, showData, {
+          headers: { "Content-Type": "application/json" },
+        });
+        alert("Show updated successfully.");
+      } else {
+        await axios.post(`${BASENDPOINT}/show/create`, showData, {
+          headers: { "Content-Type": "application/json" },
+        });
+        alert("Show created successfully.");
+      }
 
       dispatch({ type: "RESET_FORM" });
       fetchShows();
       setModalOpen(false);
     } catch (error) {
-      console.error("Error creating show:", error);
-      alert("Failed to create the show. Please try again.");
+      console.error("Error submitting show:", error);
+      alert("Failed to submit the show. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEdit = (show) => {
+    const formattedDate = getFormattedDate(show?.date);
+  
+    const shows = {
+      ...show, // Spread first to avoid overriding other properties
+      date: formattedDate, // Override the date to be in YYYY-MM-DD format
+    };
+  
+    dispatch({ type: "SET_EDIT_SHOW", payload: shows });
+    setEditMode(true);
+    setModalOpen(true);
+  };
+  
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this show?")) return;
+    try {
+      await axios.delete(`${BASENDPOINT}/show/delete/${id}`);
+      alert("Show deleted successfully.");
+      fetchShows();
+    } catch (error) {
+      console.error("Error deleting show:", error);
     }
   };
 
@@ -144,33 +167,49 @@ const Shows = () => {
             <thead>
               <tr>
                 <th>Drama</th>
-                <th>Director</th>
                 <th>Venue</th>
                 <th>Date</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {shows?.length > 0 ? (
-                shows?.map((data) =>
-                  data?.shows?.map((show, index) => (
+                shows?.map((data,i) =>
                     <tr
                       onScroll={(e) => {
                         const isBottom =
                           e.target.scrollHeight - e.target.scrollTop ===
                           e.target.clientHeight;
                       }}
-                      key={index}
+                      key={i}
                     >
-                      <td className="truncate" title={data?.dramaTitle}>{data?.dramaTitle}</td>
-                      <td className="truncate" title={data?.director}>{data?.director}</td>
-                      <td className="truncate" title={show?.venueName}>{show?.venueName}</td>
+                      <td className="truncate" title={data?.dramaTitle}>
+                        {data?.dramaTitle}
+                      </td>
+
+                      <td className="truncate" title={data?.venueName}>
+                        {data?.venueName}
+                      </td>
                       <td className="truncate">
-                        {show?.dates?.map((date, index) => (
-                          <span className="row_date" key={index}>{getDateNum(date?.date)}</span>
-                        ))}
+                          <span className="row_date">
+                            {getDateNum(data?.date)}
+                          </span>
+                      </td>
+                      <td>
+                        <button
+                          className="event_btn edit"
+                          onClick={() => handleEdit(data)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="event_btn delete"
+                          onClick={() => handleDelete(data?._id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
-                  ))
                 )
               ) : (
                 <tr>
@@ -261,7 +300,7 @@ const Shows = () => {
                     onClick={handleSubmit}
                     disabled={loading}
                   >
-                    {loading ? "Uploading..." : "Create"}
+                    {loading ? "Processing..." : editMode ? "Update" : "Create"}
                   </button>
                 </div>
               </div>

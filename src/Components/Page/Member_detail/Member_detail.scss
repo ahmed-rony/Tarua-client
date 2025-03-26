@@ -14,7 +14,7 @@
       align-items: start;
       @include mobile {
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: -25px;
       }
       h2 {
         @include tablet {

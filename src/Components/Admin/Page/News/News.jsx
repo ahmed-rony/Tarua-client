@@ -4,6 +4,7 @@ import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { BASENDPOINT, UPLOAD_CLOUDINARY } from "../../../../variable";
 import CreateNewsContext from "../../../Utils/Reducers/CreateNews_Reducer";
+import { getFormattedDate } from "../../../Page/Seat_Plan/Seat_Plan";
 
 function getMonth(dateProp) {
   const date = new Date(dateProp);
@@ -24,8 +25,8 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [image, setImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const { state, dispatch } = useContext(CreateNewsContext);
-  // console.log(state);
 
   const fetchNews = useCallback(async () => {
     try {
@@ -73,48 +74,74 @@ const News = () => {
     setLoading(true);
 
     try {
-      const formData = new FormData();
-      if (image) formData.append("image", image);
+      let uploadedImageUrl = state.image; // Default to existing image
 
-      // ✅ Upload images to Cloudinary
-      const uploadResponse = await axios.post(
-        BASENDPOINT + UPLOAD_CLOUDINARY,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      // ✅ Only upload if a new image is provided
+      if (image) {
+        const formData = new FormData();
+        formData.append("image", image);
 
-      if (!uploadResponse.data.image) {
-        throw new Error("Image upload successful, but no URLs returned.");
+        const uploadResponse = await axios.post(
+          BASENDPOINT + UPLOAD_CLOUDINARY,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        if (!uploadResponse.data.image) {
+          throw new Error("Image upload successful, but no URLs returned.");
+        }
+
+        uploadedImageUrl = uploadResponse.data.image; // Update with new image
       }
 
-      // ✅ Prepare drama data
+      // ✅ Prepare member data
       const newsData = {
         ...state,
-        image: uploadResponse.data.image,
+        image: uploadedImageUrl || state.image,
       };
 
-      console.log(newsData);
+      // ✅ Update or create member
+      const response = editMode
+        ? await axios.patch(`${BASENDPOINT}/news/update/${state._id}`, newsData)
+        : await axios.post(`${BASENDPOINT}/news/create`, newsData);
 
-      // ✅ Send drama data to backend
-      const projectResponse = await axios.post(
-        BASENDPOINT + "/news/create",
-        newsData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+      alert(
+        editMode ? "News updated successfully." : "News created successfully."
       );
-
-      alert("Drama created successfully.");
 
       dispatch({ type: "RESET_FORM" });
       setImage(null);
       fetchNews();
       setModalOpen(false);
     } catch (error) {
-      console.error("Error creating drama:", error);
-      alert("Failed to create the drama. Please try again.");
+      console.error("Error submitting member:", error);
+      alert("Failed to submit the news. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEdit = (news) => {
+    const formattedDate = getFormattedDate(news?.date);
+
+    const newses = {
+      ...news,
+      date: formattedDate,
+    };
+
+    dispatch({ type: "SET_EDIT_NEWS", payload: newses });
+    setEditMode(true);
+    setModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this news?")) return;
+    try {
+      await axios.delete(`${BASENDPOINT}/news/delete/${id}`);
+      alert("News deleted successfully.");
+      fetchNews();
+    } catch (error) {
+      console.error("Error deleting news:", error);
     }
   };
 
@@ -143,6 +170,7 @@ const News = () => {
                 <th>Title</th>
                 <th>Description</th>
                 <th>Date</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -156,11 +184,25 @@ const News = () => {
                     }}
                     key={index}
                   >
-                    <td>{data?.title}</td>
+                    <td className="truncate">{data?.title}</td>
                     <td className="truncate">{data?.description}</td>
                     <td className="truncate">
                       {getMonth(data?.date)} {getDateNum(data?.date)},{" "}
                       {getShortYear(data?.date)}
+                    </td>
+                    <td>
+                      <button
+                        className="event_btn edit"
+                        onClick={() => handleEdit(data)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="event_btn delete"
+                        onClick={() => handleDelete(data?._id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -210,7 +252,17 @@ const News = () => {
                 </div>
                 <div className="right">
                   <div className="item">
-                    <label htmlFor="">Time</label>
+                    <label htmlFor="">URL</label>
+                    <input
+                      name="url"
+                      type="text"
+                      placeholder="news url"
+                      value={state?.url || ""}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="item">
+                    <label htmlFor="">Description</label>
                     <textarea
                       name="description"
                       cols="30"
@@ -225,7 +277,7 @@ const News = () => {
                     onClick={handleSubmit}
                     disabled={loading}
                   >
-                    {loading ? "Uploading..." : "Create"}
+                    {loading ? "Processing..." : editMode ? "Update" : "Create"}
                   </button>
                 </div>
               </div>

@@ -25,7 +25,7 @@ const Single_Seat = ({ seat, onClick }) => {
 
   return (
     <div
-      className="single"
+      className="single main_hall_single_seat"
       onClick={() => !isDisabled && onClick(seat)} // Only allow click if not disabled
     >
       <div className="arm" />

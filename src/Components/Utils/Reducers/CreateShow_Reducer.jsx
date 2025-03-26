@@ -24,6 +24,8 @@ const CreateShowReducer = (state, action) => {
         time: action.payload.timeArray,
         rawTime: action.payload.rawTime,
       };
+    case "SET_EDIT_SHOW": // ✅ Add this case
+      return { ...state, ...action.payload };
     case "RESET_FORM":
       return INITIAL_STATE;
     default:

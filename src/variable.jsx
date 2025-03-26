@@ -1,3 +1,4 @@
+// export const BASENDPOINT = "https://tarua-server.onrender.com/api";
 export const BASENDPOINT = "http://localhost:30000/api";
 export const VerifyToken = "/verify-token";
 export const RegisterPoint = "/auth/register";

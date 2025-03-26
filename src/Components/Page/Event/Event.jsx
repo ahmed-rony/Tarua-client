@@ -1,6 +1,4 @@
 import "./Event.scss";
-import img01 from "../../../../public/images/13.jpg";
-import img02 from "../../../../public/images/37.jpg";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
@@ -9,6 +7,7 @@ import { BASENDPOINT } from "../../../variable";
 const Event = () => {
   const [loading, setLoading] = useState(false);
   const [shows, setShows] = useState([]);
+  // console.log(shows);
 
   const fetchShows = useCallback(async () => {
     try {
@@ -53,7 +52,14 @@ const Event = () => {
                 </div>
                 <h4>
                   {data?.title}
-                  <span>{data?.director}</span>
+                  <span>
+                    {data?.director?.map((d, i) => (
+                      <>
+                        <span key={i}>{d?.name}</span>
+                        {i < data?.director?.length - 1 && ", "}
+                      </>
+                    ))}
+                  </span>
                 </h4>
               </div>
               <div className="info">
@@ -70,7 +76,6 @@ const Event = () => {
           <div> No data found</div>
         )}
       </div>
-      
     </div>
   );
 };

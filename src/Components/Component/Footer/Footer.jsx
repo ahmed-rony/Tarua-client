@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import "./Footer.scss";
 import MapComponent from "../MapComponent/MapComponent";
+import { MdMail } from "react-icons/md";
+import { FaPhone } from "react-icons/fa";
+import img01 from "/images/logo.png";
 
 const Footer = () => {
   return (
@@ -8,7 +11,13 @@ const Footer = () => {
       <div className="container foo">
         <div className="footer_cont">
           <div className="logo_div">
-            <Link to="/" className="logo">তাড়ুয়া</Link>
+            {/* <Link to="/" className="logo">
+              তাড়ুয়া
+            </Link> */}
+            <Link to="/" className="logo">
+              {/* তাড়ুয়া */}
+              <img src={img01} alt="" />
+            </Link>
           </div>
           <div className="footer_con">
             <div className="left">
@@ -27,25 +36,19 @@ const Footer = () => {
                   <li>
                     <Link to="/blog">Ticket</Link>
                   </li>
-                  <li>
-                    <Link to="/contact">Contact</Link>
-                  </li>
                 </ul>
               </div>
               <div className="col">
                 <h4 className="heading">Info and Reservations</h4>
                 <ul>
                   <li>
-                    <img src="/public/images/phone.png" alt="" />{" "}
+                    <FaPhone className="icon" />
                     <h5>
-                      +01111111111111 <span>+1000000000000</span>
+                      +8801648391826 <span>+8801866291779</span>
                     </h5>
                   </li>
                   <li>
-                    <img src="/public/images/email.png" alt="" />{" "}
-                    <h5>
-                      abc@gmail.com <span>tarua@gmail.com</span>
-                    </h5>
+                    <MdMail className="icon" /> <h5>tarua.stage@gmail.com</h5>
                   </li>
                 </ul>
               </div>
@@ -53,9 +56,8 @@ const Footer = () => {
                 <h4 className="heading">Location</h4>
                 <ul>
                   <li>
-                    Bangladesh Shilpakala Academy, <br />
-                    14, 3 Segun Bagicha Rd, <br />
-                    Dhaka 1000, Bangladesh
+                    Novoday Sports Club,
+                    <br /> 4 Tajmahal Rd, Dhaka 1207
                   </li>
                 </ul>
               </div>

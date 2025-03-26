@@ -16,12 +16,12 @@ const customIcon = new L.Icon({
 });
 
 const MapComponent = () => {
-  const position = [23.734028, 90.40485];
+  const position = [23.763701214533636, 90.35977005208792];
 
   return (
     <MapContainer
       center={position}
-      zoom={15}
+      zoom={14}
       style={{ height: "250px", width: "100%", borderRadius: "3px" }}
     >
       <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />

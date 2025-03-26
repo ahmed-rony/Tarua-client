@@ -1,14 +1,35 @@
 import "./Banner.scss";
-import img02 from "/images/43.jpg";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { slideImg } from "../../Utils/Datas/News";
 
 const Banner = () => {
+  const settings = {
+    autoplay: true,
+    dots: false,
+    fade: true,
+    arrows: false,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
-    <div className="banner"  style={{ backgroundImage: `url(${img02})` }}>
+    <div className="banner" >
+      <Slider {...settings}>
+        {slideImg.map((pic,i) => (
+          <div key={i} className="slide_img">
+            <img src={pic?.pic} alt="" />
+          </div>
+        ))}
+      </Slider>
       <div className="container">
         <div className="content">
           <div className="left">
             <h1>
-              Lorem ipsum <span>dolor</span>, sit amet consectetur{" "}
+              Lorem ipsum <span>dolor</span>,<br/> sit amet consectetur{" "}
               <span>adipisicing</span>.
             </h1>
             <p>

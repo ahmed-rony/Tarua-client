@@ -85,6 +85,8 @@ const CreateDramaReducer = (state, action) => {
         };
       }
       
+      case "SET_EDIT_DRAMA": // ✅ Add this case
+      return { ...state, ...action.payload };
 
     case "RESET_FORM":
       return INITIAL_STATE;

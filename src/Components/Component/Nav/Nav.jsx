@@ -4,6 +4,7 @@ import { FaBarsProgress } from "react-icons/fa6";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 import { useState } from "react";
+import img01 from "/images/logo.png";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,8 @@ const Nav = () => {
         <div className="nav container">
           <div className="logo_sec">
             <Link to="/" className="logo">
-              তাড়ুয়া
+              {/* তাড়ুয়া */}
+              <img src={img01} alt="" />
             </Link>
             <FaBarsProgress
               className="menu_icon"

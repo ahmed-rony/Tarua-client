@@ -6,9 +6,10 @@ import "./Seat_Plan.scss";
 import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
 import ShowContext from "../../Utils/Reducers/Ticket_Reducer";
-import ExperimentalHall from "../../Component/ExperimentalHall/ExperimentalHall";
+import ExperimentalHall from "../../Component/Halls/ExperimentalHall/ExperimentalHall";
 import { BASENDPOINT, EXPERIMENTAL_HALL } from "../../../variable";
 import PayMessageModal from "../../Component/PayMessageModal/PayMessageModal";
+import ShilpokolaMainHall from "../../Component/Halls/ShilpokolaMainHall/ShilpokolaMainHall";
 
 export function getMonth(dateProp) {
   const date = new Date(dateProp);
@@ -28,6 +29,21 @@ export function getShortYear(dateString) {
   const year = new Date(dateString).getFullYear(); // Extract full year (e.g., 2025)
   return year.toString().slice(-2); // Return last two digits of the year
 }
+export function getFullYear(dateString) {
+  const year = new Date(dateString).getFullYear(); // Extract full year (e.g., 2025)
+  return year.toString(); // Return last two digits of the year
+}
+export function getFormattedDate(dateProp) {
+  if (!dateProp) return ""; // Handle undefined/null date
+
+  const date = new Date(dateProp);
+  if (isNaN(date)) {
+    console.error("Invalid date:", dateProp);
+    return dateProp; // Return the original in case of failure
+  }
+
+  return date.toISOString().split("T")[0]; // "YYYY-MM-DD"
+}
 
 const Seat_Plan = () => {
   const [loading, setLoading] = useState(false);
@@ -45,7 +61,6 @@ const Seat_Plan = () => {
     email,
     selectedShowId,
   } = state;
-  
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -66,9 +81,7 @@ const Seat_Plan = () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        BASENDPOINT + `/show/${showId}`
-      );
+      const response = await axios.get(BASENDPOINT + `/show/${showId}`);
 
       if (response.data) {
         setShows(response.data);
@@ -447,6 +460,7 @@ const Seat_Plan = () => {
             //   </div>
             // </div>
           )}
+          <ShilpokolaMainHall />
         </div>
       </div>
       <div className="ticket_price">
@@ -461,7 +475,14 @@ const Seat_Plan = () => {
               <div className="row">
                 <span>Director:</span>
                 {shows?.drama?.director && (
-                  <span>{shows?.drama?.director}</span>
+                  <span>
+                    {shows?.drama?.director?.map((d, i) => (
+                      <>
+                        <span key={i}>{d?.name}</span>
+                        {i < shows?.drama?.director?.length - 1 && ", "}
+                      </>
+                    ))}
+                  </span>
                 )}
               </div>
               <div className="row">
@@ -520,7 +541,11 @@ const Seat_Plan = () => {
                 />
               </div>
             </div>
-            <button className="event_btn" onClick={handleSubmit} disabled={loading}>
+            <button
+              className="event_btn"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
               Buy Ticket
             </button>
           </div>

@@ -12,17 +12,16 @@ const Drama = () => {
   const [info, setInfo] = useState([]);
   const [image, setImage] = useState(null);
   const [files, setFiles] = useState([]);
+  const [editMode, setEditMode] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const { state, dispatch } = useContext(CreateDramaContext);
-  console.log(drama);
+  
 
   const fetchDrama = useCallback(async () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        BASENDPOINT + `/drama/getAllDramas`
-      );
+      const response = await axios.get(BASENDPOINT + `/drama/getAllDramas`);
 
       if (response.data) {
         setDrama(response.data);
@@ -44,9 +43,7 @@ const Drama = () => {
     try {
       setLoading(true);
 
-      const response = await axios.get(
-        BASENDPOINT + `/member/get-member`
-      );
+      const response = await axios.get(BASENDPOINT + `/member/get-member`);
 
       if (response.data) {
         setInfo(response.data);
@@ -137,54 +134,79 @@ const Drama = () => {
     setLoading(true);
 
     try {
+      let uploadedImageUrl = state.image; // Default to existing image
+      let uploadedDramaPics = state.dramaPics || []; // Default to existing dramaPics
+
       const formData = new FormData();
       if (image) formData.append("image", image);
       files.forEach((file) => formData.append("dramaPics", file));
 
-      // ✅ Upload images to Cloudinary
-      const uploadResponse = await axios.post(
-        BASENDPOINT + UPLOAD_CLOUDINARY,
-        formData
-      );
+      // ✅ Upload only if new images are provided
+      if (image || files.length > 0) {
+        const uploadResponse = await axios.post(
+          BASENDPOINT + UPLOAD_CLOUDINARY,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
 
-      if (
-        !uploadResponse.data.image ||
-        !uploadResponse.data.dramaPics?.length
-      ) {
-        throw new Error("Image upload successful, but no URLs returned.");
+        if (
+          !uploadResponse.data.image &&
+          !uploadResponse.data.dramaPics?.length
+        ) {
+          throw new Error("Image upload successful, but no URLs returned.");
+        }
+
+        // Update only if new images were uploaded
+        uploadedImageUrl = uploadResponse.data.image || state.image;
+        uploadedDramaPics = uploadResponse.data.dramaPics || state.dramaPics;
       }
 
       // ✅ Prepare drama data
       const dramaData = {
         ...state,
-        image: uploadResponse.data.image,
-        dramaPics: uploadResponse.data.dramaPics,
+        image: uploadedImageUrl,
+        dramaPics: uploadedDramaPics,
       };
 
-      console.log("Sending dramaData:", dramaData);
+      // ✅ Update or create drama
+      const projectResponse = editMode
+        ? await axios.patch(
+            `${BASENDPOINT}/drama/update/${state._id}`,
+            dramaData
+          )
+        : await axios.post(`${BASENDPOINT}/drama/create`, dramaData);
 
-      // ✅ Send drama data to backend
-      const projectResponse = await axios.post(
-        BASENDPOINT + "/drama/create",
-        dramaData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+      alert(
+        editMode ? "Drama updated successfully." : "Drama created successfully."
       );
-
-      alert("Drama created successfully.");
 
       dispatch({ type: "RESET_FORM" });
       setImage(null);
       setFiles([]);
       fetchDrama();
       setModalOpen(false);
-      //   window.location.reload();
     } catch (error) {
-      console.error("Error creating drama:", error);
-      alert("Failed to create the drama. Please try again.");
+      console.error("Error submitting drama:", error);
+      alert("Failed to submit the drama. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEdit = (drama) => {
+    dispatch({ type: "SET_EDIT_DRAMA", payload: drama });
+    setEditMode(true);
+    setModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this drama?")) return;
+    try {
+      await axios.delete(`${BASENDPOINT}/drama/delete/${id}`);
+      alert("Drama deleted successfully.");
+      fetchDrama();
+    } catch (error) {
+      console.error("Error deleting drama:", error);
     }
   };
 
@@ -213,6 +235,7 @@ const Drama = () => {
                 <th>Drama</th>
                 <th>Director</th>
                 <th>Shows</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -229,10 +252,27 @@ const Drama = () => {
                     <td className="truncate">{data?.title}</td>
                     <td className="truncate">
                       {data?.director?.map((d, i) => (
-                        <span key={i}>{d.name}</span>
+                        <div key={i}>
+                          <span >{d.name}</span>
+                          {i < data?.director?.length - 1 && ", "}
+                        </div>
                       ))}
                     </td>
                     <td className="truncate">{data?.shows?.length}</td>
+                    <td>
+                      <button
+                        className="event_btn edit"
+                        onClick={() => handleEdit(data)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="event_btn delete"
+                        onClick={() => handleDelete(data?._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -442,7 +482,7 @@ const Drama = () => {
                       name="description"
                       cols="30"
                       rows="6"
-                      placeholder="designers name (line break for multiple names)"
+                      placeholder="description (line break for multiple pera)"
                       value={state?.rawDescription}
                       onChange={handleChange}
                     ></textarea>
@@ -452,7 +492,7 @@ const Drama = () => {
                     onClick={handleSubmit}
                     disabled={loading}
                   >
-                    {loading ? "Uploading..." : "Create"}
+                    {loading ? "Processing..." : editMode ? "Update" : "Create"}
                   </button>
                 </div>
               </div>

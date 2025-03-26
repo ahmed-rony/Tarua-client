@@ -39,10 +39,11 @@ const Upcoming = () => {
   return (
     <>
       <div className="container upcoming">
-        <div className="title">
-          <h2>Upcoming Events</h2>
-          {/* <div className="line"/><div className="dot"/> */}
-        </div>
+        {show?.length > 0 && (
+          <div className="title">
+            <h2>Upcoming Events</h2>
+          </div>
+        )}
         {show &&
           show?.map((datas) =>
             datas?.shows?.map((data, index) => (

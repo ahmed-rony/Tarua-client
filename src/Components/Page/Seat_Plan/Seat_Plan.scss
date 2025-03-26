@@ -115,7 +115,8 @@
           width: 100%;
         }
 
-        .auditorium_margin_seats {
+        .auditorium_margin_seats,
+        .mainhall_margin {
           width: 90%;
           height: 580px;
           background: rgb(135, 135, 135);
@@ -188,6 +189,93 @@
               -ms-transform: translateX(-50%);
               -o-transform: translateX(-50%);
             }
+
+            .main_auditorium_content {
+              display: flex;
+              flex-direction: column;
+              gap: 30px;
+              .stage {
+                width: 80%;
+                height: 100px;
+                border: 1px solid #bcbcbc;
+                margin: 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 40px;
+                font-weight: 300;
+              }
+              .mainhall_downFloor,
+              .mainhall_upperFloor {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                .floor {
+                  font-size: 30px;
+                  font-weight: 300;
+                  text-align: center;
+                  border-top: 1px solid #bcbcbc;
+                  padding: 20px 0;
+                }
+                .row_cons {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  .row {
+                    display: flex;
+                    align-items: end;
+                    gap: 2px;
+                    border-bottom: 1px solid #bcbcbc;
+                    .space {
+                      width: 40px;
+                    }
+                  }
+                  .s_10 {
+                    margin-left: -21px;
+                    @include tablet {
+                      margin-left: -17px;
+                    }
+                    @include mobile {
+                      margin-left: -15px;
+                    }
+                    &:last-child {
+                      margin-left: inherit;
+                      margin-right: -21px;
+                      @include tablet {
+                        margin-right: -17px;
+                      }
+                      @include mobile {
+                        margin-right: -15px;
+                      }
+                    }
+                  }
+                  .s_11 {
+                    margin-left: -42px;
+                    &:last-child {
+                      margin-left: inherit;
+                      margin-right: -42px;
+                    }
+                  }
+                  .s_13 {
+                    margin-left: -21px;
+                  }
+                  .s_15 {
+                    margin-left: 21px;
+                  }
+                }
+              }
+              .mainhall_downFloor {
+                padding: 20px 0;
+                border-top: 1px solid #bcbcbc;
+                border-bottom: 1px solid #bcbcbc;
+              }
+            }
+          }
+          .mainhall_content {
+            border: none;
+            padding: 20px;
+            height: inherit;
+            align-content: flex-end;
           }
           .indie_rows {
             .seat_box02 {
@@ -240,6 +328,26 @@
               -moz-transform: rotate(-90deg) translateX(-40%);
               -ms-transform: rotate(-90deg) translateX(-40%);
               -o-transform: rotate(-90deg) translateX(-40%);
+            }
+          }
+        }
+        .mainhall_margin {
+          width: 95%;
+          height: 650px;
+          
+          @include mobile {
+            width: 190%;
+          }
+          .main_hall_single_seat {
+            .seat {
+              @include tablet {
+                width: 11px;
+                height: 14px;
+              }
+              @include mobile {
+                width: 9px;
+                height: 18px;
+              }
             }
           }
         }

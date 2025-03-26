@@ -41,6 +41,7 @@
       background: #222;
       display: inline-block;
       position: absolute;
+      bottom: 20%;
       left: -100%;
       @include mobile {
         padding: 10px;

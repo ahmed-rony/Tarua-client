@@ -2,6 +2,10 @@
 
 .play_detail {
   @include themed {
+
+    @include mobile {
+      padding-bottom: 40px;
+    }
     .top {
       align-items: center;
       @include mobile {
